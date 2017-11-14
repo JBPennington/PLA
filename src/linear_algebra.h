@@ -18,61 +18,89 @@ extern "C" {
 
 #define LINMATH_H_DEFINE_VEC(n) \
 typedef float vec##n[n]; \
-static inline void vec##n##_add(vec##n r, vec##n const a, vec##n const b) \
+static inline void vec##n##_add_n(vec##n r, vec##n const a, vec##n const b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = a[i] + b[i]; \
 } \
-static inline float* vec##n##_add(vec##n a, vec##n const b) \
+static inline float* vec##n##_add_r(vec##n a, vec##n const b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         a[i] += b[i]; \
     return a; \
 } \
-static inline void vec##n##_sub(vec##n r, vec##n const a, vec##n const b) \
+static inline void vec##n##_add(vec##n a, vec##n const b) \
+{ \
+    int i; \
+    for(i=0; i<(n); ++i) \
+        a[i] += b[i]; \
+} \
+static inline void vec##n##_sub_n(vec##n r, vec##n const a, vec##n const b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = a[i] - b[i]; \
 } \
-static inline float* vec##n##_sub(vec##n a, vec##n const b) \
+static inline float* vec##n##_sub_r(vec##n a, vec##n const b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         a[i] -= b[i]; \
     return a; \
 } \
-static inline void vec##n##_scale(vec##n r, vec##n const v, float const s) \
+static inline void vec##n##_sub(vec##n a, vec##n const b) \
+{ \
+    int i; \
+    for(i=0; i<(n); ++i) \
+        a[i] -= b[i]; \
+} \
+static inline void vec##n##_scale_n(vec##n r, vec##n const v, float const s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = v[i] * s; \
 } \
-static inline float* vec##n##_scale(vec##n v, float const s) \
+static inline float* vec##n##_scale_r(vec##n v, float const s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         v[i] *= s; \
     return v; \
 } \
+static inline void vec##n##_scale(vec##n v, float const s) \
+{ \
+    int i; \
+    for(i=0; i<(n); ++i) \
+        v[i] *= s; \
+} \
 static inline float vec##n##_mul_inner(vec##n const a, vec##n const b) \
 { \
-    float p = 0.; \
+    float p = 0.0f; \
     int i; \
     for(i=0; i<(n); ++i) \
         p += b[i]*a[i]; \
     return p; \
 } \
-static inline float vec##n##_mag(vec##n const v) \
+static inline float vec##n##_norm(vec##n const v) \
 { \
     return sqrtf(vec##n##_mul_inner(v,v)); \
 } \
-static inline void vec##n##_norm(vec##n r, vec##n const v) \
+static inline void vec##n##_normalize_n(vec##n r, vec##n const v) \
 { \
-    float k = 1.0 / vec##n##_mag(v); \
-    vec##n##_scale(r, v, k); \
+    float k = 1.0 / vec##n##_norm(v); \
+    vec##n##_scale_n(r, v, k); \
+} \
+static inline void vec##n##_normalize(vec##n v) \
+{ \
+    float k = 1.0 / vec##n##_norm(v); \
+    vec##n##_scale(v, k); \
+} \
+static inline float* vec##n##_normalize_r(vec##n v) \
+{ \
+    float k = 1.0 / vec##n##_norm(v); \
+    return vec##n##_scale_r(v, k); \
 } \
 static inline void vec##n##_min(vec##n r, vec##n a, vec##n b) \
 { \
@@ -86,7 +114,7 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
     for(i=0; i<(n); ++i) \
         r[i] = a[i]>b[i] ? a[i] : b[i]; \
 } \
-static inline void vec##n##_eqs(vec##n a, vec##n b) \
+static inline void vec##n##_copy(vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
@@ -168,26 +196,26 @@ static inline void mat3x3_transpose(mat3x3 M, mat3x3 N) {
 static inline void mat3x3_add(mat3x3 M, mat3x3 a, mat3x3 b) {
     int i;
     for (i = 0; i < 3; ++ i)
-        vec3_add(M[i], a[i], b[i]);
+        vec3_add_n(M[i], a[i], b[i]);
 }
 
 static inline void mat3x3_sub(mat3x3 M, mat3x3 a, mat3x3 b) {
     int i;
     for (i = 0; i < 3; ++ i)
-        vec3_sub(M[i], a[i], b[i]);
+        vec3_sub_n(M[i], a[i], b[i]);
 }
 
 static inline void mat3x3_scale(mat3x3 M, mat3x3 a, float k) {
     int i;
     for (i = 0; i < 4; ++ i)
-        vec3_scale(M[i], a[i], k);
+        vec3_scale_n(M[i], a[i], k);
 }
 
 static inline void mat3x3_scale_aniso(mat3x3 M, mat3x3 a, float x, float y, float z) {
     int i;
-    vec3_scale(M[0], a[0], x);
-    vec3_scale(M[1], a[1], y);
-    vec3_scale(M[2], a[2], z);
+    vec3_scale_n(M[0], a[0], x);
+    vec3_scale_n(M[1], a[1], y);
+    vec3_scale_n(M[2], a[2], z);
     for (i = 0; i < 4; ++ i) {
         M[3][i] = a[3][i];
     }
@@ -266,26 +294,26 @@ static inline void mat4x4_transpose(mat4x4 M, mat4x4 N) {
 static inline void mat4x4_add(mat4x4 M, mat4x4 a, mat4x4 b) {
     int i;
     for (i = 0; i < 4; ++ i)
-        vec4_add(M[i], a[i], b[i]);
+        vec4_add_n(M[i], a[i], b[i]);
 }
 
 static inline void mat4x4_sub(mat4x4 M, mat4x4 a, mat4x4 b) {
     int i;
     for (i = 0; i < 4; ++ i)
-        vec4_sub(M[i], a[i], b[i]);
+        vec4_sub_n(M[i], a[i], b[i]);
 }
 
 static inline void mat4x4_scale(mat4x4 M, mat4x4 a, float k) {
     int i;
     for (i = 0; i < 4; ++ i)
-        vec4_scale(M[i], a[i], k);
+        vec4_scale_n(M[i], a[i], k);
 }
 
 static inline void mat4x4_scale_aniso(mat4x4 M, mat4x4 a, float x, float y, float z) {
     int i;
-    vec4_scale(M[0], a[0], x);
-    vec4_scale(M[1], a[1], y);
-    vec4_scale(M[2], a[2], z);
+    vec4_scale_n(M[0], a[0], x);
+    vec4_scale_n(M[1], a[1], y);
+    vec4_scale_n(M[2], a[2], z);
     for (i = 0; i < 4; ++ i) {
         M[3][i] = a[3][i];
     }
@@ -374,8 +402,8 @@ static inline void mat4x4_rotate(mat4x4 R, mat4x4 M, float x, float y, float z, 
     float c = cosf(angle);
     vec3 u = {x, y, z};
 
-    if (vec3_mag(u) > 1e-4) {
-        vec3_norm(u, u);
+    if (vec3_norm(u) > 1e-4) {
+        vec3_normalize(u);
         mat4x4 T;
         mat4x4_from_vec3_mul_outer(T, u, u);
 
@@ -482,32 +510,32 @@ static inline void mat4x4_invert(mat4x4 T, mat4x4 M) {
 
 static inline void mat4x4_orthonormalize(mat4x4 R, mat4x4 M) {
     mat4x4_dup(R, M);
-    float s = 1.;
+    float s = 1.0f;
     vec3 h;
 
-    vec3_norm(R[2], R[2]);
+    vec3_normalize(R[2]);
 
     s = vec3_mul_inner(R[1], R[2]);
-    vec3_scale(h, R[2], s);
-    vec3_sub(R[1], R[1], h);
-    vec3_norm(R[2], R[2]);
+    vec3_scale_n(h, R[2], s);
+    vec3_sub_n(R[1], R[1], h);
+    vec3_normalize(R[2]);
 
     s = vec3_mul_inner(R[1], R[2]);
-    vec3_scale(h, R[2], s);
-    vec3_sub(R[1], R[1], h);
-    vec3_norm(R[1], R[1]);
+    vec3_scale_n(h, R[2], s);
+    vec3_sub_n(R[1], R[1], h);
+    vec3_normalize(R[1]);
 
     s = vec3_mul_inner(R[0], R[1]);
-    vec3_scale(h, R[1], s);
-    vec3_sub(R[0], R[0], h);
-    vec3_norm(R[0], R[0]);
+    vec3_scale_n(h, R[1], s);
+    vec3_sub_n(R[0], R[0], h);
+    vec3_normalize(R[0]);
 }
 
 static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, float n, float f) {
-    M[0][0] = 2.f * n / (r - l);
+    M[0][0] = 2.0f * n / (r - l);
     M[0][1] = M[0][2] = M[0][3] = 0.f;
 
-    M[1][1] = 2. * n / (t - b);
+    M[1][1] = 2.0f * n / (t - b);
     M[1][0] = M[1][2] = M[1][3] = 0.f;
 
     M[2][0] = (r + l) / (r - l);
@@ -569,12 +597,12 @@ static inline void mat4x4_look_at(mat4x4 m, vec3 eye, vec3 center, vec3 up) {
     /* TODO: The negation of of can be spared by swapping the order of
      *       operands in the following cross products in the right way. */
     vec3 f;
-    vec3_sub(f, center, eye);
-    vec3_norm(f, f);
+    vec3_sub_n(f, center, eye);
+    vec3_normalize(f);
 
     vec3 s;
     vec3_mul_cross(s, f, up);
-    vec3_norm(s, s);
+    vec3_normalize(s);
 
     vec3 t;
     vec3_mul_cross(t, s, f);
@@ -624,10 +652,10 @@ static inline void quat_sub(quat r, quat a, quat b) {
 static inline void quat_mul(quat r, quat p, quat q) {
     vec3 w;
     vec3_mul_cross(r, p, q);
-    vec3_scale(w, p, q[3]);
-    vec3_add(r, r, w);
-    vec3_scale(w, q, p[3]);
-    vec3_add(r, r, w);
+    vec3_scale_n(w, p, q[3]);
+    vec3_add_n(r, r, w);
+    vec3_scale_n(w, q, p[3]);
+    vec3_add_n(r, r, w);
     r[3] = p[3] * q[3] - vec3_mul_inner(p, q);
 }
 
@@ -654,7 +682,7 @@ static inline void quat_conj(quat r, quat q) {
 
 static inline void quat_rotate(quat r, float angle, vec3 axis) {
     vec3 v;
-    vec3_scale(v, axis, sinf(angle / 2));
+    vec3_scale_n(v, axis, sinf(angle / 2));
     int i;
     for (i = 0; i < 3; ++ i)
         r[i] = v[i];
@@ -674,13 +702,13 @@ v' = v + q.w * t + cross(q.xyz, t)
     vec3 u = {q[0], q[1], q[2]};
 
     vec3_mul_cross(t, q_xyz, v);
-    vec3_scale(t, t, 2);
+    vec3_scale_n(t, t, 2);
 
     vec3_mul_cross(u, q_xyz, t);
-    vec3_scale(t, t, q[3]);
+    vec3_scale_n(t, t, q[3]);
 
-    vec3_add(r, v, t);
-    vec3_add(r, r, u);
+    vec3_add_n(r, v, t);
+    vec3_add_n(r, r, u);
 }
 
 static inline void mat4x4_from_quat(mat4x4 M, quat q) {

@@ -40,7 +40,9 @@ set(TEST_FILES
         src/tests/linear_algebra_subtraction_tests.cpp
         src/tests/linear_algebra_scalar_tests.cpp
         src/tests/linear_algebra_mul_inner_tests.cpp
-        src/tests/linear_algebra_mag_tests.cpp
+        src/tests/linear_algebra_norm_tests.cpp
+        src/tests/linear_algebra_normalize_tests.cpp
+        src/tests/linear_algebra_min_max_tests.cpp
 )
 
 
