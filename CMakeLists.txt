@@ -43,6 +43,8 @@ set(TEST_FILES
         src/tests/linear_algebra_norm_tests.cpp
         src/tests/linear_algebra_normalize_tests.cpp
         src/tests/linear_algebra_min_max_tests.cpp
+        src/tests/linear_algebra_copy_tests.cpp
+        src/tests/linear_algebra_misc_tests.cpp
 )
 
 

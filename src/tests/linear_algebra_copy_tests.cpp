@@ -81,3 +81,4 @@ TEST_F(Linear_Algebra_Copy_, Copy_Two_Vec6_Test) {
         EXPECT_EQ(expect[iter], a[iter]);
     }
 }
+
