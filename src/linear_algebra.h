@@ -235,79 +235,177 @@ static inline float * vec4_reflect_r(vec4 v, vec4 n) {
 }
 
 
-//
-//#define LINMATH_H_DEFINE_VEC(n) \
-//typedef float vec##n[n]; \
-//static inline void vec##n##_add_n(vec##n r, vec##n const a, vec##n const b) \
-//{ \
-//    int i; \
-//    for(i=0; i<(n); ++i) \
-//        r[i] = a[i] + b[i]; \
-//} \
+
+#define LINMATH_H_DEFINE_SQUARE_MAT(n) \
+typedef vec##n mat##n##x##n[n]; \
+static inline void mat##n##x##n##_copy(mat##n##x##n A, mat##n##x##n const B) { \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] = B[row][col]; \
+        } \
+    } \
+} \
+static inline void mat##n##x##n##_identity(mat##n##x##n A) { \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] = (row == col) ? 1.0f : 0.0f; \
+        } \
+    } \
+} \
+static inline vec##n * mat##n##x##n##_identity_r(mat##n##x##n A) { \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] = (row == col) ? 1.0f : 0.0f; \
+        } \
+    } \
+    return A; \
+} \
+static inline void mat##n##x##n##_row(vec##n row, mat##n##x##n const A, unsigned int row_index) { \
+    unsigned int col; \
+    for (col=0; col<n; ++col) { \
+        row[col] = A[row_index][col]; \
+    } \
+} \
+static inline float * mat##n##x##n##_row_r(vec##n row, mat##n##x##n const A, unsigned int row_index) { \
+    unsigned int col; \
+    for (col=0; col<n; ++col) { \
+        row[col] = A[row_index][col]; \
+    } \
+    return row; \
+} \
+static inline void mat##n##x##n##_col(vec##n col, mat##n##x##n const A, unsigned int col_index) { \
+    unsigned int row; \
+    for (row=0; row<n; ++row) { \
+        col[row] = A[row][col_index]; \
+    } \
+} \
+static inline float * mat##n##x##n##_col_r(vec##n col, mat##n##x##n const A, unsigned int col_index) { \
+    unsigned int row; \
+    for (row=0; row<n; ++row) { \
+        col[row] = A[row][col_index]; \
+    } \
+    return col; \
+} \
+static inline void mat##n##x##n##_transpose(mat##n##x##n A) { \
+    mat##n##x##n temp; \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            temp[row][col] = A[col][row]; \
+        } \
+    } \
+    mat##n##x##n##_copy(A,temp); \
+} \
+static inline vec##n * mat##n##x##n##_transpose_r(mat##n##x##n A) { \
+    mat##n##x##n temp; \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            temp[row][col] = A[col][row]; \
+        } \
+    } \
+    mat##n##x##n##_copy(A,temp); \
+    return A; \
+} \
+static inline void mat##n##x##n##_add_n(mat##n##x##n result, mat##n##x##n const A, mat##n##x##n const B) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            result[row][col] = A[row][col]+B[row][col]; \
+        } \
+    } \
+}\
+static inline void mat##n##x##n##_add(mat##n##x##n A, mat##n##x##n const B) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] += B[row][col]; \
+        } \
+    } \
+} \
+static inline vec##n * mat##n##x##n##_add_r(mat##n##x##n A, mat##n##x##n const B) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] += B[row][col]; \
+        } \
+    } \
+    vec##n * result = A; \
+    return A; \
+} \
+static inline void mat##n##x##n##_sub_n(mat##n##x##n result, mat##n##x##n const A, mat##n##x##n const B) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            result[row][col] = A[row][col]-B[row][col]; \
+        } \
+    } \
+}\
+static inline void mat##n##x##n##_sub(mat##n##x##n A, mat##n##x##n const B) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] -= B[row][col]; \
+        } \
+    } \
+} \
+static inline vec##n * mat##n##x##n##_sub_r(mat##n##x##n A, mat##n##x##n const B) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] -= B[row][col]; \
+        } \
+    } \
+    return A; \
+} \
+static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n const A, const float scale) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            result[row][col] = A[row][col] * scale; \
+        } \
+    } \
+}\
+static inline void mat##n##x##n##_scale(mat##n##x##n A, const float scale) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] *= scale; \
+        } \
+    } \
+} \
+static inline vec##n * mat##n##x##n##_scale_r(mat##n##x##n A, const float scale) \
+{ \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            A[row][col] *= scale; \
+        } \
+    } \
+    return A; \
+}
+
+
+LINMATH_H_DEFINE_SQUARE_MAT(2)
+LINMATH_H_DEFINE_SQUARE_MAT(3)
+LINMATH_H_DEFINE_SQUARE_MAT(4)
+LINMATH_H_DEFINE_SQUARE_MAT(5)
+LINMATH_H_DEFINE_SQUARE_MAT(6)
 
 
 
 
-
-
-
-
-//
-//typedef vec3 mat3x3[3];
-//typedef vec4 mat4x4[4];
-//typedef vec6 mat6x6[6];
-//
-//
-//
-//
-//
-//static inline void mat3x3_identity(mat3x3 M) {
-//    int i, j;
-//    for (i = 0; i < 3; ++ i)
-//        for (j = 0; j < 3; ++ j)
-//            M[i][j] = i == j ? 1.f : 0.f;
-//}
-//
-//static inline void mat3x3_dup(mat3x3 M, mat3x3 N) {
-//    int i, j;
-//    for (i = 0; i < 3; ++ i)
-//        for (j = 0; j < 3; ++ j)
-//            M[i][j] = N[i][j];
-//}
-//
-//static inline void mat3x3_row(vec3 r, mat3x3 M, int i) {
-//    int k;
-//    for (k = 0; k < 3; ++ k)
-//        r[k] = M[k][i];
-//}
-//
-//static inline void mat3x3_col(vec3 r, mat3x3 M, int i) {
-//    int k;
-//    for (k = 0; k < 3; ++ k)
-//        r[k] = M[i][k];
-//}
-//
-//static inline void mat3x3_transpose(mat3x3 M, mat3x3 N) {
-//    int row, col;
-//    for (row=0; row<3; ++row){
-//        for (col=0; col<3; ++col) {
-//            M[col][row] = N[row][col];
-//        }
-//    }
-//}
-//
-//static inline void mat3x3_add(mat3x3 M, mat3x3 a, mat3x3 b) {
-//    int i;
-//    for (i = 0; i < 3; ++ i)
-//        vec3_add_n(M[i], a[i], b[i]);
-//}
-//
-//static inline void mat3x3_sub(mat3x3 M, mat3x3 a, mat3x3 b) {
-//    int i;
-//    for (i = 0; i < 3; ++ i)
-//        vec3_sub_n(M[i], a[i], b[i]);
-//}
-//
 //static inline void mat3x3_scale(mat3x3 M, mat3x3 a, float k) {
 //    int i;
 //    for (i = 0; i < 4; ++ i)
