@@ -332,3 +332,5 @@ TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_In_Place_And_Retu
     }
 }
 
+
+

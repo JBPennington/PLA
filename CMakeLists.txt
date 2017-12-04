@@ -45,6 +45,8 @@ set(TEST_FILES
         src/tests/linear_algebra_min_max_tests.cpp
         src/tests/linear_algebra_copy_tests.cpp
         src/tests/linear_algebra_misc_tests.cpp
+        src/tests/linear_algebra_mat_mul_vec_tests.cpp
+        src/tests/linear_algebra_mat_mul_mat_tests.cpp
 )
 
 

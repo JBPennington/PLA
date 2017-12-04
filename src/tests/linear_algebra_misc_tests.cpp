@@ -7,24 +7,9 @@ extern "C" {
 #include <iostream>
 #include <map>
 
-
-//typedef std::map<const std::uint32_t, float **> MatMap ;
-//
-//void initialize_empty_matrices(MatMap & matrix_mapper) {
-//    for (std::size_t mat_size=2; mat_size<7; ++mat_size){
-//        for (std::size_t row=0; row<mat_size; ++row) {
-//            for (std::size_t col=0; col<mat_size; ++col) {
-//                float** matrix = matrix_mapper[mat_size];
-//                matrix[row][col] = 0.0f;
-//            }
-//        }
-//    }
-//}
-
-
 class Linear_Algebra_Misc_ : public testing::Test {
     void SetUp() {
-//        initialize_empty_matrices(matrix_mapper);
+
     }
     void TearDown() {
 
@@ -516,3 +501,43 @@ TEST_F(Linear_Algebra_Misc_, Two_Through_Six_Square_Mat_Transpose_Return_Test) {
         }
     }
 }
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Get_Rotational_Mat_Test) {
+    mat3x3 mat3_expected {{0,1,2},{4,5,6},{8,9,10}};
+
+    mat3x3 mat3_result; mat3x3_copy(mat3_result, Mat3_zero);
+
+    mat4x4_get_rotational(mat3_result, Mat4A);
+
+    for (std::size_t row = 0; row < 3; ++row) {
+        for (std::size_t col = 0; col < 3; ++col) {
+            EXPECT_NEAR(mat3_expected[row][col], mat3_result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Return_Rotational_Mat_Test) {
+    mat3x3 mat3_expected {{0,1,2},{4,5,6},{8,9,10}};
+
+    vec3 * mat3_result = mat4x4_get_rotational_rn(Mat3_zero, Mat4A);
+
+    for (std::size_t row = 0; row < 3; ++row) {
+        for (std::size_t col = 0; col < 3; ++col) {
+            EXPECT_NEAR(mat3_expected[row][col], mat3_result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Trsanslate_Mat_Test) {
+    mat4x4 mat4_expected {{0,1,2,4},{4,5,6,8},{8,9,10,12},{12,13,14,15}};
+
+    mat4x4_translate(Mat4A, 1.0f, 1.0f, 1.0f);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(mat4_expected[row][col], Mat4A[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+

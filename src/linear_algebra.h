@@ -10,12 +10,6 @@ extern "C" {
 #include <math.h>
 
 
-//#define mat3x3_empty {{0,0,0},{0,0,0},{0,0,0}}
-//#define mat4x4_empty {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}}
-//#define mat3x3_identity {{1,0,0},{0,1,0},{0,0,1}}
-//#define mat4x4_identity {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
-
-
 #define LINMATH_H_DEFINE_VEC(n) \
 typedef float vec##n[n]; \
 static inline void vec##n##_add_n(vec##n r, vec##n const a, vec##n const b) \
@@ -235,7 +229,6 @@ static inline float * vec4_reflect_r(vec4 v, vec4 n) {
 }
 
 
-
 #define LINMATH_H_DEFINE_SQUARE_MAT(n) \
 typedef vec##n mat##n##x##n[n]; \
 static inline void mat##n##x##n##_copy(mat##n##x##n A, mat##n##x##n const B) { \
@@ -394,8 +387,90 @@ static inline vec##n * mat##n##x##n##_scale_r(mat##n##x##n A, const float scale)
         } \
     } \
     return A; \
+} \
+static inline void mat##n##x##n##_mul_vec##n##_n(vec##n result, mat##n##x##n A, vec##n B) { \
+    int row, col; \
+    for(row=0; row<n; ++row){ \
+        result[row] = 0.0f; \
+        for(col=0; col<n; ++col){ \
+            result[row] += A[row][col] * B[col]; \
+        } \
+    } \
+} \
+static inline float * mat##n##x##n##_mul_vec##n##_r(mat##n##x##n A, vec##n B) { \
+    vec##n result; \
+    int row, col; \
+    for(row=0; row<n; ++row){ \
+        result[row] = 0.0f; \
+        for(col=0; col<n; ++col){ \
+            result[row] += A[row][col] * B[col]; \
+        } \
+    } \
+    vec##n##_copy(B,result); \
+    return B; \
+} \
+static inline float * mat##n##x##n##_mul_vec##n##_rn(vec##n result, mat##n##x##n A, vec##n B) { \
+    int row, col; \
+    for(row=0; row<n; ++row){ \
+        result[row] = 0.0f; \
+        for(col=0; col<n; ++col){ \
+            result[row] += A[row][col] * B[col]; \
+        } \
+    } \
+    return result; \
+}\
+static inline void mat##n##x##n##_mul(mat##n##x##n a, mat##n##x##n b) { \
+    mat##n##x##n temp;\
+    unsigned int row, col, keep; \
+    for (row=0; row<n; ++row) { \
+        for (col = 0; col<n; ++col) { \
+            temp[row][col] = 0.0f; \
+            for (keep = 0; keep<n; ++keep) { \
+                temp[row][col] += a[row][keep] * b[keep][col]; \
+            } \
+        } \
+    } \
+    mat##n##x##n##_copy(a, temp); \
+} \
+static inline void mat##n##x##n##_mul_n(mat##n##x##n result, mat##n##x##n a, mat##n##x##n b) { \
+    mat##n##x##n temp;\
+    unsigned int row, col, keep; \
+    for (row=0; row<n; ++row) { \
+        for (col = 0; col<n; ++col) { \
+            temp[row][col] = 0.0f; \
+            for (keep = 0; keep<n; ++keep) { \
+                temp[row][col] += a[row][keep] * b[keep][col]; \
+            } \
+        } \
+    } \
+    mat##n##x##n##_copy(result, temp); \
+} \
+static inline vec##n * mat##n##x##n##_mul_nr(mat##n##x##n result, mat##n##x##n a, mat##n##x##n b) { \
+    unsigned int row, col, keep; \
+    for (row=0; row<n; ++row) { \
+        for (col = 0; col<n; ++col) { \
+            result[row][col] = 0.0f; \
+            for (keep = 0; keep<n; ++keep) { \
+                result[row][col] += a[row][keep] * b[keep][col]; \
+            } \
+        } \
+    } \
+    return result; \
+} \
+static inline vec##n * mat##n##x##n##_mul_r(mat##n##x##n a, mat##n##x##n b) { \
+    mat##n##x##n temp;\
+    unsigned int row, col, keep; \
+    for (row=0; row<n; ++row) { \
+        for (col = 0; col<n; ++col) { \
+            temp[row][col] = 0.0f; \
+            for (keep = 0; keep<n; ++keep) { \
+                temp[row][col] += a[row][keep] * b[keep][col]; \
+            } \
+        } \
+    } \
+    mat##n##x##n##_copy(a, temp); \
+    return a; \
 }
-
 
 LINMATH_H_DEFINE_SQUARE_MAT(2)
 LINMATH_H_DEFINE_SQUARE_MAT(3)
@@ -404,193 +479,32 @@ LINMATH_H_DEFINE_SQUARE_MAT(5)
 LINMATH_H_DEFINE_SQUARE_MAT(6)
 
 
+static inline void mat4x4_get_rotational(mat3x3 M, mat4x4 const A) {
+    int row, col;
+    for (row=0; row<3; ++row) {
+        for(col=0; col<3; ++col) {
+            M[row][col] = A[row][col];
+        }
+    }
+}
+
+static inline vec3 * mat4x4_get_rotational_rn(mat3x3 M, mat4x4 A) {
+    int row, col;
+    for (row=0; row<3; ++row) {
+        for(col=0; col<3; ++col) {
+            M[row][col] = A[row][col];
+        }
+    }
+    return M;
+}
+
+static inline void mat4x4_translate(mat4x4 T, float x, float y, float z) {
+    T[0][3] += x;
+    T[1][3] += y;
+    T[2][3] += z;
+}
 
 
-//static inline void mat3x3_scale(mat3x3 M, mat3x3 a, float k) {
-//    int i;
-//    for (i = 0; i < 4; ++ i)
-//        vec3_scale_n(M[i], a[i], k);
-//}
-//
-//static inline void mat3x3_scale_aniso(mat3x3 M, mat3x3 a, float x, float y, float z) {
-//    int i;
-//    vec3_scale_n(M[0], a[0], x);
-//    vec3_scale_n(M[1], a[1], y);
-//    vec3_scale_n(M[2], a[2], z);
-//    for (i = 0; i < 4; ++ i) {
-//        M[3][i] = a[3][i];
-//    }
-//}
-//
-//static inline void mat3x3_mul(mat3x3 M, mat3x3 a, mat3x3 b) {
-//    mat3x3 temp;
-//    int k, r, c;
-//    for (c = 0; c < 3; ++ c)
-//        for (r = 0; r < 3; ++ r) {
-//            temp[c][r] = 0.f;
-//            for (k = 0; k < 3; ++ k)
-//                temp[c][r] += a[k][r] * b[c][k];
-//        }
-//    mat3x3_dup(M, temp);
-//}
-//
-//static inline void mat3x3_mul_inline(mat3x3 a, mat3x3 b) {
-//    mat3x3 temp;
-//    int k, r, c;
-//    for (c = 0; c < 3; ++ c)
-//        for (r = 0; r < 3; ++ r) {
-//            temp[c][r] = 0.f;
-//            for (k = 0; k < 3; ++ k)
-//                temp[c][r] += a[k][r] * b[c][k];
-//        }
-//    for (c = 0; c < 3; ++ c)
-//        for (r = 0; r < 3; ++ r) {
-//            a[c][r] = temp[c][r];
-//        }
-//}
-//
-//static inline void mat3x3_mul_vec3(vec3 M, mat3x3 a, vec3 b) {
-//    int row, col;
-//    for(row=0; row<3; ++row){
-//        M[row] = 0.0f;
-//        for(col=0; col<3; ++col){
-//            M[row] += a[row][col] * b[col];
-//        }
-//    }
-//}
-//
-//static inline void mat4x4_identity(mat4x4 M) {
-//    int i, j;
-//    for (i = 0; i < 4; ++ i)
-//        for (j = 0; j < 4; ++ j)
-//            M[i][j] = i == j ? 1.f : 0.f;
-//}
-//
-//static inline void mat4x4_dup(mat4x4 M, mat4x4 N) {
-//    int i, j;
-//    for (i = 0; i < 4; ++ i)
-//        for (j = 0; j < 4; ++ j)
-//            M[i][j] = N[i][j];
-//}
-//
-//static inline void mat4x4_row(vec4 r, mat4x4 M, int i) {
-//    int k;
-//    for (k = 0; k < 4; ++ k)
-//        r[k] = M[k][i];
-//}
-//
-//static inline void mat4x4_col(vec4 r, mat4x4 M, int i) {
-//    int k;
-//    for (k = 0; k < 4; ++ k)
-//        r[k] = M[i][k];
-//}
-//
-//static inline void mat4x4_transpose(mat4x4 M, mat4x4 N) {
-//    int i, j;
-//    for (j = 0; j < 4; ++ j)
-//        for (i = 0; i < 4; ++ i)
-//            M[i][j] = N[j][i];
-//}
-//
-//static inline void mat4x4_add(mat4x4 M, mat4x4 a, mat4x4 b) {
-//    int i;
-//    for (i = 0; i < 4; ++ i)
-//        vec4_add_n(M[i], a[i], b[i]);
-//}
-//
-//static inline void mat4x4_sub(mat4x4 M, mat4x4 a, mat4x4 b) {
-//    int i;
-//    for (i = 0; i < 4; ++ i)
-//        vec4_sub_n(M[i], a[i], b[i]);
-//}
-//
-//static inline void mat4x4_scale(mat4x4 M, mat4x4 a, float k) {
-//    int i;
-//    for (i = 0; i < 4; ++ i)
-//        vec4_scale_n(M[i], a[i], k);
-//}
-//
-//static inline void mat4x4_scale_aniso(mat4x4 M, mat4x4 a, float x, float y, float z) {
-//    int i;
-//    vec4_scale_n(M[0], a[0], x);
-//    vec4_scale_n(M[1], a[1], y);
-//    vec4_scale_n(M[2], a[2], z);
-//    for (i = 0; i < 4; ++ i) {
-//        M[3][i] = a[3][i];
-//    }
-//}
-//
-//static inline void mat4x4_mul(mat4x4 M, mat4x4 a, mat4x4 b) {
-//    mat4x4 temp;
-//    int k, r, c;
-//    for (c = 0; c < 4; ++ c)
-//        for (r = 0; r < 4; ++ r) {
-//            temp[c][r] = 0.f;
-//            for (k = 0; k < 4; ++ k)
-//                temp[c][r] += a[k][r] * b[c][k];
-//        }
-//    mat4x4_dup(M, temp);
-//}
-//
-//static inline void mat4x4_mul_inline(mat4x4 a, mat4x4 b) {
-//    mat4x4 temp;
-//    int k, r, c;
-//    for (c = 0; c < 4; ++ c)
-//        for (r = 0; r < 4; ++ r) {
-//            temp[c][r] = 0.f;
-//            for (k = 0; k < 4; ++ k)
-//                temp[c][r] += a[k][r] * b[c][k];
-//        }
-//    for (c = 0; c < 4; ++ c)
-//        for (r = 0; r < 4; ++ r) {
-//            a[c][r] = temp[c][r];
-//        }
-//}
-//
-//static inline void mat4x4_mul_vec4(vec4 r, mat4x4 M, vec4 v) {
-//    int i, j;
-//    for (j = 0; j < 4; ++ j) {
-//        r[j] = 0.0f;
-//        for (i = 0; i < 4; ++ i)
-//            r[j] += M[i][j] * v[i];
-//    }
-//}
-//
-//static inline void mat4x4_get_rotational(mat3x3 M, mat4x4 A) {
-//    int i, j;
-//    for (i=0; i<3; ++i) {
-//        for(j=0; j<3; ++j) {
-//            M[i][j] = A[i][j];
-//        }
-//    }
-//}
-//
-//static inline void mat6x6_mul_vec6(vec4 result, mat6x6 A, vec6 B) {
-//    int i, j;
-//    for (j = 0; j < 6; ++ j) {
-//        result[j] = 0.0f;
-//        for (i = 0; i < 6; ++ i)
-//            result[j] += A[j][i] * B[i];
-//    }
-//}
-//
-//static inline void mat4x4_translate(mat4x4 T, float x, float y, float z) {
-//    mat4x4_identity(T);
-//    T[3][0] = x;
-//    T[3][1] = y;
-//    T[3][2] = z;
-//}
-//
-//static inline void mat4x4_translate_in_place(mat4x4 M, float x, float y, float z) {
-//    vec4 t = {x, y, z, 0};
-//    vec4 r;
-//    int i;
-//    for (i = 0; i < 4; ++ i) {
-//        mat4x4_row(r, M, i);
-//        M[3][i] += vec4_mul_inner(r, t);
-//    }
-//}
-//
 //static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b) {
 //    int i, j;
 //    for (i = 0; i < 4; ++ i)
@@ -628,7 +542,7 @@ LINMATH_H_DEFINE_SQUARE_MAT(6)
 //        T[3][3] = 1.;
 //        mat4x4_mul(R, M, T);
 //    } else {
-//        mat4x4_dup(R, M);
+//        mat4x4_copy(R, M);
 //    }
 //}
 //
@@ -731,7 +645,7 @@ LINMATH_H_DEFINE_SQUARE_MAT(6)
 //    vec3_sub_n(R[0], R[0], h);
 //    vec3_normalize(R[0]);
 //}
-//
+
 //static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, float n, float f) {
 //    M[0][0] = 2.0f * n / (r - l);
 //    M[0][1] = M[0][2] = M[0][3] = 0.f;
