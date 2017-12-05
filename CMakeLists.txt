@@ -74,7 +74,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         # Link with libraries
         add_library(${PROJECT_LIB} SHARED ${SOURCE_FILES} ${HEADER_FILES})
         # Dependencies
-        target_include_directories(${PROJECT_LIB} PRIVATE
+        target_include_directories(${PROJECT_LIB} SYSTEM PRIVATE
                 ${BASEPATH}
         )
         install(TARGETS ${PROJECT_LIB} LIBRARY DESTINATION lib)
@@ -90,6 +90,7 @@ else() # This is not the Root CMake
 
     # Link with libraries
     add_library(${PROJECT_LIB} ${SOURCE_FILES} ${HEADER_FILES})
+    SET_TARGET_PROPERTIES(${PROJECT_LIB} PROPERTIES LINKER_LANGUAGE C)
     # Dependencies
     target_include_directories(${PROJECT_LIB} PRIVATE
             ${BASEPATH}
