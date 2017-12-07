@@ -12,11 +12,24 @@ extern "C" {
 
 #define LINMATH_H_DEFINE_VEC(n) \
 typedef float vec##n[n]; \
+static inline void vec##n##_zero(vec##n a) \
+{ \
+    int i; \
+    for(i=0; i<(n); ++i) \
+        a[i] = 0; \
+} \
 static inline void vec##n##_add_n(vec##n r, vec##n const a, vec##n const b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = a[i] + b[i]; \
+} \
+static inline float* vec##n##_add_rn(vec##n r, vec##n const a, vec##n const b) \
+{ \
+    int i; \
+    for(i=0; i<(n); ++i) \
+        r[i] = a[i] + b[i]; \
+    return r; \
 } \
 static inline float* vec##n##_add_r(vec##n a, vec##n const b) \
 { \
@@ -55,6 +68,13 @@ static inline void vec##n##_scale_n(vec##n r, vec##n const v, float const s) \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = v[i] * s; \
+} \
+static inline float* vec##n##_scale_rn(vec##n r, vec##n const v, float const s) \
+{ \
+    int i; \
+    for(i=0; i<(n); ++i) \
+        r[i] = v[i] * s; \
+    return r; \
 } \
 static inline float* vec##n##_scale_r(vec##n v, float const s) \
 { \
@@ -121,10 +141,20 @@ LINMATH_H_DEFINE_VEC(4)
 LINMATH_H_DEFINE_VEC(5)
 LINMATH_H_DEFINE_VEC(6)
 
+#define EMPTYVEC3 {0,0,0}
+
+
 static inline void vec3_mul_cross_n(vec3 r, vec3 const a, vec3 const b) {
     r[0] = a[1] * b[2] - a[2] * b[1];
     r[1] = a[2] * b[0] - a[0] * b[2];
     r[2] = a[0] * b[1] - a[1] * b[0];
+}
+
+static inline float * vec3_mul_cross_rn(vec3 r, vec3 const a, vec3 const b) {
+    r[0] = a[1] * b[2] - a[2] * b[1];
+    r[1] = a[2] * b[0] - a[0] * b[2];
+    r[2] = a[0] * b[1] - a[1] * b[0];
+    return r;
 }
 
 static inline float * vec3_mul_cross_r(vec3 a, vec3 const b) {
@@ -303,6 +333,14 @@ static inline vec##n * mat##n##x##n##_transpose_r(mat##n##x##n A) { \
     mat##n##x##n##_copy(A,temp); \
     return A; \
 } \
+static inline void mat##n##x##n##_transpose_n(mat##n##x##n M, mat##n##x##n A) { \
+    int row, col; \
+    for (row=0; row<n; ++row) { \
+        for (col=0; col<n; ++col) { \
+            M[row][col] = A[col][row]; \
+        } \
+    } \
+} \
 static inline void mat##n##x##n##_add_n(mat##n##x##n result, mat##n##x##n const A, mat##n##x##n const B) \
 { \
     int row, col; \
@@ -388,7 +426,7 @@ static inline vec##n * mat##n##x##n##_scale_r(mat##n##x##n A, const float scale)
     } \
     return A; \
 } \
-static inline void mat##n##x##n##_mul_vec##n##_n(vec##n result, mat##n##x##n A, vec##n B) { \
+static inline void mat##n##x##n##_mul_vec##n##_n(vec##n result, mat##n##x##n const A, vec##n const B) { \
     int row, col; \
     for(row=0; row<n; ++row){ \
         result[row] = 0.0f; \
@@ -397,7 +435,7 @@ static inline void mat##n##x##n##_mul_vec##n##_n(vec##n result, mat##n##x##n A, 
         } \
     } \
 } \
-static inline float * mat##n##x##n##_mul_vec##n##_r(mat##n##x##n A, vec##n B) { \
+static inline float * mat##n##x##n##_mul_vec##n##_r(mat##n##x##n const A, vec##n B) { \
     vec##n result; \
     int row, col; \
     for(row=0; row<n; ++row){ \
@@ -409,7 +447,7 @@ static inline float * mat##n##x##n##_mul_vec##n##_r(mat##n##x##n A, vec##n B) { 
     vec##n##_copy(B,result); \
     return B; \
 } \
-static inline float * mat##n##x##n##_mul_vec##n##_rn(vec##n result, mat##n##x##n A, vec##n B) { \
+static inline float * mat##n##x##n##_mul_vec##n##_rn(vec##n result, mat##n##x##n const A, vec##n const B) { \
     int row, col; \
     for(row=0; row<n; ++row){ \
         result[row] = 0.0f; \
@@ -419,7 +457,7 @@ static inline float * mat##n##x##n##_mul_vec##n##_rn(vec##n result, mat##n##x##n
     } \
     return result; \
 }\
-static inline void mat##n##x##n##_mul(mat##n##x##n a, mat##n##x##n b) { \
+static inline void mat##n##x##n##_mul(mat##n##x##n a, mat##n##x##n const b) { \
     mat##n##x##n temp;\
     unsigned int row, col, keep; \
     for (row=0; row<n; ++row) { \
@@ -432,7 +470,7 @@ static inline void mat##n##x##n##_mul(mat##n##x##n a, mat##n##x##n b) { \
     } \
     mat##n##x##n##_copy(a, temp); \
 } \
-static inline void mat##n##x##n##_mul_n(mat##n##x##n result, mat##n##x##n a, mat##n##x##n b) { \
+static inline void mat##n##x##n##_mul_n(mat##n##x##n result, mat##n##x##n const a, mat##n##x##n const b) { \
     mat##n##x##n temp;\
     unsigned int row, col, keep; \
     for (row=0; row<n; ++row) { \
@@ -445,7 +483,7 @@ static inline void mat##n##x##n##_mul_n(mat##n##x##n result, mat##n##x##n a, mat
     } \
     mat##n##x##n##_copy(result, temp); \
 } \
-static inline vec##n * mat##n##x##n##_mul_nr(mat##n##x##n result, mat##n##x##n a, mat##n##x##n b) { \
+static inline vec##n * mat##n##x##n##_mul_nr(mat##n##x##n result, mat##n##x##n const a, mat##n##x##n const b) { \
     unsigned int row, col, keep; \
     for (row=0; row<n; ++row) { \
         for (col = 0; col<n; ++col) { \
@@ -457,7 +495,7 @@ static inline vec##n * mat##n##x##n##_mul_nr(mat##n##x##n result, mat##n##x##n a
     } \
     return result; \
 } \
-static inline vec##n * mat##n##x##n##_mul_r(mat##n##x##n a, mat##n##x##n b) { \
+static inline vec##n * mat##n##x##n##_mul_r(mat##n##x##n a, mat##n##x##n const b) { \
     mat##n##x##n temp;\
     unsigned int row, col, keep; \
     for (row=0; row<n; ++row) { \
@@ -472,11 +510,16 @@ static inline vec##n * mat##n##x##n##_mul_r(mat##n##x##n a, mat##n##x##n b) { \
     return a; \
 }
 
+
 LINMATH_H_DEFINE_SQUARE_MAT(2)
 LINMATH_H_DEFINE_SQUARE_MAT(3)
 LINMATH_H_DEFINE_SQUARE_MAT(4)
 LINMATH_H_DEFINE_SQUARE_MAT(5)
 LINMATH_H_DEFINE_SQUARE_MAT(6)
+
+
+#define IDENTITY3x3 {{1,0,0},{0,1,0},{0,0,1}}
+#define IDENTITY4x4 {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 
 
 static inline void mat4x4_get_rotational(mat3x3 M, mat4x4 const A) {
