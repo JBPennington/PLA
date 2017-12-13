@@ -10,6 +10,7 @@ extern "C" {
 class Linear_Algebra_Mul_Inner : public testing::Test {
     void SetUp() {}
     void TearDown() {}
+
 };
 
 TEST_F(Linear_Algebra_Mul_Inner, Mul_Inner_Two_Vec2_Test) {
