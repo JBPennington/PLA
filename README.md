@@ -22,3 +22,20 @@ git clone --recursive https://github.com/JBPennington/PLA.git
 git submodule add https://github.com/JBPennington/PLA.git
 git submodule update --init --recursive
 ```
+
+## Building
+
+The only reason to build the repository is to test it.
+
+To build, execute the following.
+
+```
+mkdir build; cd build;
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DTEST=ON; make;
+```
+
+A ctest executable "test_PLA" should've been made.
+
+## Testing
+
+At the moment, there should be 100% code coverage.
