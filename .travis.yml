@@ -63,6 +63,7 @@ script:
      - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=RELEASE -DTEST=ON ..
      - make
      - ctest
+     - ./test_PLA
 
 
 #after_success:
