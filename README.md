@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/JBPennington/PLA.svg?branch=master)](https://travis-ci.org/JBPennington/PLA)
+
 # PLA
 
 PLA (Portable Linear Algebra) is designed to be a portable, single header, MISRA compliant C, linear algebra library.
