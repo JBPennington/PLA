@@ -1,6 +1,6 @@
 
 extern "C" {
-#include "../linear_algebra.h"
+#include "../pla.h"
 }
 
 #include <gtest/gtest.h>

@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
 # Project Strings
-set(PROJECT_LIB             PLA)
+set(PROJECT_LIB pla)
 set(PROJECT_EXE_TEST        test_PLA)
 set(PROJECT_LIBRARIES_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
@@ -30,23 +30,23 @@ set(SOURCE_FILES
 
 
 set(HEADER_FILES
-        src/linear_algebra.h
+        pla/pla.h
 )
 
 
 set(TEST_FILES
-        src/tests/linear_algebra_tests.cpp
-        src/tests/linear_algebra_addition_tests.cpp
-        src/tests/linear_algebra_subtraction_tests.cpp
-        src/tests/linear_algebra_scalar_tests.cpp
-        src/tests/linear_algebra_mul_inner_tests.cpp
-        src/tests/linear_algebra_norm_tests.cpp
-        src/tests/linear_algebra_normalize_tests.cpp
-        src/tests/linear_algebra_min_max_tests.cpp
-        src/tests/linear_algebra_copy_tests.cpp
-        src/tests/linear_algebra_misc_tests.cpp
-        src/tests/linear_algebra_mat_mul_vec_tests.cpp
-        src/tests/linear_algebra_mat_mul_mat_tests.cpp
+        pla/tests/linear_algebra_tests.cpp
+        pla/tests/linear_algebra_addition_tests.cpp
+        pla/tests/linear_algebra_subtraction_tests.cpp
+        pla/tests/linear_algebra_scalar_tests.cpp
+        pla/tests/linear_algebra_mul_inner_tests.cpp
+        pla/tests/linear_algebra_norm_tests.cpp
+        pla/tests/linear_algebra_normalize_tests.cpp
+        pla/tests/linear_algebra_min_max_tests.cpp
+        pla/tests/linear_algebra_copy_tests.cpp
+        pla/tests/linear_algebra_misc_tests.cpp
+        pla/tests/linear_algebra_mat_mul_vec_tests.cpp
+        pla/tests/linear_algebra_mat_mul_mat_tests.cpp
 )
 
 

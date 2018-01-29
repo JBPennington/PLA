@@ -1,13 +1,13 @@
 
 extern "C" {
-#include "../linear_algebra.h"
+#include "../pla.h"
 }
 
 #include <gtest/gtest.h>
 #include <iostream>
 
 
-class Linear_Algebra_Scale_ : public testing::Test {
+class Linear_Algebra_Add_ : public testing::Test {
     void SetUp() {}
     void TearDown() {}
 
@@ -30,14 +30,14 @@ public:
     mat6x6 Mat6B     {{0,1,2,3,4,5},{6,7,8,9,10,11},{12,13,14,15,16,17},{18,19,20,21,22,23},{24,25,26,27,28,29},{30,31,32,33,34,35}};
 };
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec2_Test) {
-    vec2    a = {0, 1};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec2_Test) {
+    vec2 a = {0, 1};
+    vec2 b = {2, 3};
 
     vec2 result = {0, 0};
-    vec2_scale_n(result, a, b);
+    vec2_add_n(result, a, b);
 
-    vec2 expect = {0, 7};
+    vec2 expect = {2, 4};
 
     uint32_t iter;
     for (iter=0; iter<2; ++iter) {
@@ -45,14 +45,14 @@ TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec2_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec3_Test) {
-    vec3    a = {0, 1, 2};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec3_Test) {
+    vec3 a = {0, 1, 2};
+    vec3 b = {3, 4, 5};
 
     vec3 result = {0, 0, 0};
-    vec3_scale_n(result, a, b);
+    vec3_add_n(result, a, b);
 
-    vec3 expect = {0, 7, 14};
+    vec3 expect = {3, 5, 7};
 
     uint32_t iter;
     for (iter=0; iter<3; ++iter) {
@@ -60,14 +60,14 @@ TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec3_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec4_Test) {
-    vec4    a = {0, 1, 2, 3};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec4_Test) {
+    vec4 a = {0, 1, 2, 3};
+    vec4 b = {4, 5, 6, 7};
 
     vec4 result = {0, 0, 0, 0};
-    vec4_scale_n(result, a, b);
+    vec4_add_n(result, a, b);
 
-    vec4 expect = {0, 7, 14, 21};
+    vec4 expect = {4, 6, 8, 10};
 
     uint32_t iter;
     for (iter=0; iter<4; ++iter) {
@@ -75,14 +75,14 @@ TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec4_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec5_Test) {
-    vec5    a = {0, 1, 2, 3, 4};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec5_Test) {
+    vec5 a = {0, 1, 2, 3, 4};
+    vec5 b = {5, 6, 7, 8, 9};
 
     vec5 result = {0, 0, 0, 0, 0};
-    vec5_scale_n(result, a, b);
+    vec5_add_n(result, a, b);
 
-    vec5 expect = {0, 7, 14, 21, 28};
+    vec5 expect = {5, 7, 9, 11, 13};
 
     uint32_t iter;
     for (iter=0; iter<5; ++iter) {
@@ -90,14 +90,14 @@ TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec5_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec6_Test) {
-    vec6    a = {0, 1, 2, 3, 4, 5};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec6_Test) {
+    vec6 a = {0, 1, 2, 3, 4, 5};
+    vec6 b = {6, 7, 8, 9, 10, 11};
 
     vec6 result = {0, 0, 0, 0, 0, 0};
-    vec6_scale_n(result, a, b);
+    vec6_add_n(result, a, b);
 
-    vec6 expect = {0, 7, 14, 21, 28, 35};
+    vec6 expect = {6, 8, 10, 12, 14, 16};
 
     uint32_t iter;
     for (iter=0; iter<6; ++iter) {
@@ -105,78 +105,78 @@ TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec6_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec2_In_Place_Test) {
-    vec2    a = {0, 1};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec2_In_Place_Test) {
+    vec2 a = {0, 1};
+    vec2 b = {2, 3};
 
-    vec2_scale(a, b);
+    vec2_add(a, b);
 
-    vec2 expect = {0, 7};
+    vec2 expect = {2, 4};
     uint32_t iter;
     for (iter=0; iter<2; ++iter) {
         EXPECT_EQ(expect[iter], a[iter]);
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec3_In_Place_Test) {
-    vec3    a = {0, 1, 2};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec3_In_Place_Test) {
+    vec3 a = {0, 1, 2};
+    vec3 b = {3, 4, 5};
 
-    vec3_scale(a, b);
+    vec3_add(a, b);
 
-    vec3 expect = {0, 7, 14};
+    vec3 expect = {3, 5, 7};
     uint32_t iter;
     for (iter=0; iter<3; ++iter) {
         EXPECT_EQ(expect[iter], a[iter]);
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec4_In_Place_Test) {
-    vec4    a = {0, 1, 2, 3};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec4_In_Place_Test) {
+    vec4 a = {0, 1, 2, 3};
+    vec4 b = {4, 5, 6, 7};
 
-    vec4_scale(a, b);
+    vec4_add(a, b);
 
-    vec4 expect = {0, 7, 14, 21};
+    vec4 expect = {4, 6, 8, 10};
     uint32_t iter;
     for (iter=0; iter<4; ++iter) {
         EXPECT_EQ(expect[iter], a[iter]);
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec5_In_Place_Test) {
-    vec5    a = {0, 1, 2, 3, 4};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec5_In_Place_Test) {
+    vec5 a = {0, 1, 2, 3, 4};
+    vec5 b = {5, 6, 7, 8, 9};
 
-    vec5_scale(a, b);
+    vec5_add(a, b);
 
-    vec5 expect = {0, 7, 14, 21, 28};
+    vec5 expect = {5, 7, 9, 11, 13};
     uint32_t iter;
     for (iter=0; iter<5; ++iter) {
         EXPECT_EQ(expect[iter], a[iter]);
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Two_Vec6_In_Place_Test) {
-    vec6    a = {0, 1, 2, 3, 4, 5};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Two_Vec6_In_Place_Test) {
+    vec6 a = {0, 1, 2, 3, 4, 5};
+    vec6 b = {6, 7, 8, 9, 10, 11};
 
-    vec6_scale(a, b);
+    vec6_add(a, b);
 
-    vec6 expect = {0, 7, 14, 21, 28, 35};
+    vec6 expect = {6, 8, 10, 12, 14, 16};
     uint32_t iter;
     for (iter=0; iter<6; ++iter) {
         EXPECT_EQ(expect[iter], a[iter]);
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec2_Test) {
-    vec2    a = {0, 1};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec2_Test) {
+    vec2 a = {0, 1};
+    vec2 b = {2, 3};
 
-    float * result = vec2_scale_r(a, b);
+    float * result = vec2_add_r(a, b);
 
-    vec2 expect = {0, 7};
+    vec2 expect = {2, 4};
 
     uint32_t iter;
     for (iter=0; iter<2; ++iter) {
@@ -184,13 +184,13 @@ TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec2_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec3_Test) {
-    vec3    a = {0, 1, 2};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec3_Test) {
+    vec3 a = {0, 1, 2};
+    vec3 b = {3, 4, 5};
 
-    float * result = vec3_scale_r(a, b);
+    float * result = vec3_add_r(a, b);
 
-    vec3 expect = {0, 7, 14};
+    vec3 expect = {3, 5, 7};
 
     uint32_t iter;
     for (iter=0; iter<3; ++iter) {
@@ -198,13 +198,13 @@ TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec3_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec4_Test) {
-    vec4    a = {0, 1, 2, 3};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec4_Test) {
+    vec4 a = {0, 1, 2, 3};
+    vec4 b = {4, 5, 6, 7};
 
-    float * result = vec4_scale_r(a, b);
+    float * result = vec4_add_r(a, b);
 
-    vec4 expect = {0, 7, 14, 21};
+    vec4 expect = {4, 6, 8, 10};
 
     uint32_t iter;
     for (iter=0; iter<4; ++iter) {
@@ -212,13 +212,13 @@ TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec4_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec5_Test) {
-    vec5    a = {0, 1, 2, 3, 4};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec5_Test) {
+    vec5 a = {0, 1, 2, 3, 4};
+    vec5 b = {5, 6, 7, 8, 9};
 
-    float * result = vec5_scale_r(a, b);
+    float * result = vec5_add_r(a, b);
 
-    vec5 expect = {0, 7, 14, 21, 28};
+    vec5 expect = {5, 7, 9, 11, 13};
 
     uint32_t iter;
     for (iter=0; iter<5; ++iter) {
@@ -226,13 +226,13 @@ TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec5_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec6_Test) {
-    vec6    a = {0, 1, 2, 3, 4, 5};
-    float   b = 7;
+TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec6_Test) {
+    vec6 a = {0, 1, 2, 3, 4, 5};
+    vec6 b = {6, 7, 8, 9, 10, 11};
 
-    float * result = vec6_scale_r(a, b);
+    float * result = vec6_add_r(a, b);
 
-    vec6 expect = {0, 7, 14, 21, 28, 35};
+    vec6 expect = {6, 8, 10, 12, 14, 16};
 
     uint32_t iter;
     for (iter=0; iter<6; ++iter) {
@@ -240,14 +240,13 @@ TEST_F(Linear_Algebra_Scale_, Scale_Return_Two_Vec6_Test) {
     }
 }
 
+TEST_F(Linear_Algebra_Add_, Two_Through_Six_Square_Mat_Add_to_New_Mat_Test) {
 
-TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_to_New_Mat_Test) {
-
-    mat2x2 Mat2_expected {{0,.5},{1,1.5}};
-    mat3x3 Mat3_expected {{0,.5,1},{1.5,2,2.5},{3,3.5,4}};
-    mat4x4 Mat4_expected {{0,.5,1,1.5},{2,2.5,3,3.5},{4,4.5,5,5.5},{6,6.5,7,7.5}};
-    mat5x5 Mat5_expected {{0,.5,1,1.5,2},{2.5,3,3.5,4,4.5},{5,5.5,6,6.5,7},{7.5,8,8.5,9,9.5},{10,10.5,11,11.5,12}};
-    mat6x6 Mat6_expected {{0,.5,1,1.5,2,2.5},{3,3.5,4,4.5,5,5.5},{6,6.5,7,7.5,8,8.5},{9,9.5,10,10.5,11,11.5},{12,12.5,13,13.5,14,14.5},{15,15.5,16,16.5,17,17.5}};
+    mat2x2 Mat2_expected {{0,2},{4,6}};
+    mat3x3 Mat3_expected {{0,2,4},{6,8,10},{12,14,16}};
+    mat4x4 Mat4_expected {{0,2,4,6},{8,10,12,14},{16,18,20,22},{24,26,28,30}};
+    mat5x5 Mat5_expected {{0,2,4,6,8},{10,12,14,16,18},{20,22,24,26,28},{30,32,34,36,38},{40,42,44,46,48}};
+    mat6x6 Mat6_expected {{0,2,4,6,8,10},{12,14,16,18,20,22},{24,26,28,30,32,34},{36,38,40,42,44,46},{48,50,52,54,56,58},{60,62,64,66,68,70}};
 
     mat2x2 Mat2_result; mat2x2_copy(Mat2_result, Mat2_zero);
     mat3x3 Mat3_result; mat3x3_copy(Mat3_result, Mat3_zero);
@@ -256,11 +255,11 @@ TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_to_New_Mat_Test) 
     mat6x6 Mat6_result; mat6x6_copy(Mat6_result, Mat6_zero);
 
     for (std::size_t size = 2; size<7; ++size) {
-        if (size == 2) mat2x2_scale_n(Mat2_result, Mat2A, 0.5f);
-        if (size == 3) mat3x3_scale_n(Mat3_result, Mat3A, 0.5f);
-        if (size == 4) mat4x4_scale_n(Mat4_result, Mat4A, 0.5f);
-        if (size == 5) mat5x5_scale_n(Mat5_result, Mat5A, 0.5f);
-        if (size == 6) mat6x6_scale_n(Mat6_result, Mat6A, 0.5f);
+        if (size == 2) mat2x2_add_n(Mat2_result, Mat2A, Mat2B);;
+        if (size == 3) mat3x3_add_n(Mat3_result, Mat3A, Mat3B);;
+        if (size == 4) mat4x4_add_n(Mat4_result, Mat4A, Mat4B);;
+        if (size == 5) mat5x5_add_n(Mat5_result, Mat5A, Mat5B);;
+        if (size == 6) mat6x6_add_n(Mat6_result, Mat6A, Mat6B);;
         for (std::size_t row = 0; row < size; ++row) {
             for (std::size_t col = 0; col < size; ++col) {
                 if (size == 2) EXPECT_NEAR(Mat2_expected[row][col], Mat2_result[row][col], tolerance) << "Matrix: " << size << " Row: " << row << " Col: " << col;
@@ -273,13 +272,13 @@ TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_to_New_Mat_Test) 
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_In_Place_Test) {
+TEST_F(Linear_Algebra_Add_, Two_Through_Six_Square_Mat_Add_In_Place_Test) {
 
-    mat2x2 Mat2_expected {{0,.5},{1,1.5}};
-    mat3x3 Mat3_expected {{0,.5,1},{1.5,2,2.5},{3,3.5,4}};
-    mat4x4 Mat4_expected {{0,.5,1,1.5},{2,2.5,3,3.5},{4,4.5,5,5.5},{6,6.5,7,7.5}};
-    mat5x5 Mat5_expected {{0,.5,1,1.5,2},{2.5,3,3.5,4,4.5},{5,5.5,6,6.5,7},{7.5,8,8.5,9,9.5},{10,10.5,11,11.5,12}};
-    mat6x6 Mat6_expected {{0,.5,1,1.5,2,2.5},{3,3.5,4,4.5,5,5.5},{6,6.5,7,7.5,8,8.5},{9,9.5,10,10.5,11,11.5},{12,12.5,13,13.5,14,14.5},{15,15.5,16,16.5,17,17.5}};
+    mat2x2 Mat2_expected {{0,2},{4,6}};
+    mat3x3 Mat3_expected {{0,2,4},{6,8,10},{12,14,16}};
+    mat4x4 Mat4_expected {{0,2,4,6},{8,10,12,14},{16,18,20,22},{24,26,28,30}};
+    mat5x5 Mat5_expected {{0,2,4,6,8},{10,12,14,16,18},{20,22,24,26,28},{30,32,34,36,38},{40,42,44,46,48}};
+    mat6x6 Mat6_expected {{0,2,4,6,8,10},{12,14,16,18,20,22},{24,26,28,30,32,34},{36,38,40,42,44,46},{48,50,52,54,56,58},{60,62,64,66,68,70}};
 
     mat2x2 Mat2_result; mat2x2_copy(Mat2_result, Mat2A);
     mat3x3 Mat3_result; mat3x3_copy(Mat3_result, Mat3A);
@@ -288,11 +287,11 @@ TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_In_Place_Test) {
     mat6x6 Mat6_result; mat6x6_copy(Mat6_result, Mat6A);
 
     for (std::size_t size = 2; size<7; ++size) {
-        if (size == 2) mat2x2_scale(Mat2_result, 0.5f);
-        if (size == 3) mat3x3_scale(Mat3_result, 0.5f);
-        if (size == 4) mat4x4_scale(Mat4_result, 0.5f);
-        if (size == 5) mat5x5_scale(Mat5_result, 0.5f);
-        if (size == 6) mat6x6_scale(Mat6_result, 0.5f);
+        if (size == 2) mat2x2_add(Mat2_result, Mat2B);
+        if (size == 3) mat3x3_add(Mat3_result, Mat3B);
+        if (size == 4) mat4x4_add(Mat4_result, Mat4B);
+        if (size == 5) mat5x5_add(Mat5_result, Mat5B);
+        if (size == 6) mat6x6_add(Mat6_result, Mat6B);
         for (std::size_t row = 0; row < size; ++row) {
             for (std::size_t col = 0; col < size; ++col) {
                 if (size == 2) EXPECT_NEAR(Mat2_expected[row][col], Mat2_result[row][col], tolerance) << "Matrix: " << size << " Row: " << row << " Col: " << col;
@@ -305,19 +304,19 @@ TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_In_Place_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_In_Place_And_Return_Test) {
+TEST_F(Linear_Algebra_Add_, Two_Through_Six_Square_Mat_Add_In_Place_And_Return_Test) {
 
-    mat2x2 Mat2_expected {{0,.5},{1,1.5}};
-    mat3x3 Mat3_expected {{0,.5,1},{1.5,2,2.5},{3,3.5,4}};
-    mat4x4 Mat4_expected {{0,.5,1,1.5},{2,2.5,3,3.5},{4,4.5,5,5.5},{6,6.5,7,7.5}};
-    mat5x5 Mat5_expected {{0,.5,1,1.5,2},{2.5,3,3.5,4,4.5},{5,5.5,6,6.5,7},{7.5,8,8.5,9,9.5},{10,10.5,11,11.5,12}};
-    mat6x6 Mat6_expected {{0,.5,1,1.5,2,2.5},{3,3.5,4,4.5,5,5.5},{6,6.5,7,7.5,8,8.5},{9,9.5,10,10.5,11,11.5},{12,12.5,13,13.5,14,14.5},{15,15.5,16,16.5,17,17.5}};
+    mat2x2 Mat2_expected {{0,2},{4,6}};
+    mat3x3 Mat3_expected {{0,2,4},{6,8,10},{12,14,16}};
+    mat4x4 Mat4_expected {{0,2,4,6},{8,10,12,14},{16,18,20,22},{24,26,28,30}};
+    mat5x5 Mat5_expected {{0,2,4,6,8},{10,12,14,16,18},{20,22,24,26,28},{30,32,34,36,38},{40,42,44,46,48}};
+    mat6x6 Mat6_expected {{0,2,4,6,8,10},{12,14,16,18,20,22},{24,26,28,30,32,34},{36,38,40,42,44,46},{48,50,52,54,56,58},{60,62,64,66,68,70}};
 
-    vec2 * Mat2_result = mat2x2_scale_r(Mat2A, 0.5f);
-    vec3 * Mat3_result = mat3x3_scale_r(Mat3A, 0.5f);
-    vec4 * Mat4_result = mat4x4_scale_r(Mat4A, 0.5f);
-    vec5 * Mat5_result = mat5x5_scale_r(Mat5A, 0.5f);
-    vec6 * Mat6_result = mat6x6_scale_r(Mat6A, 0.5f);
+    vec2 * Mat2_result = mat2x2_add_r(Mat2A, Mat2B);
+    vec3 * Mat3_result = mat3x3_add_r(Mat3A, Mat3B);
+    vec4 * Mat4_result = mat4x4_add_r(Mat4A, Mat4B);
+    vec5 * Mat5_result = mat5x5_add_r(Mat5A, Mat5B);
+    vec6 * Mat6_result = mat6x6_add_r(Mat6A, Mat6B);
 
     for (std::size_t size = 2; size<7; ++size) {
         for (std::size_t row = 0; row < size; ++row) {
@@ -331,6 +330,3 @@ TEST_F(Linear_Algebra_Scale_, Two_Through_Six_Square_Mat_Scale_In_Place_And_Retu
         }
     }
 }
-
-
-
