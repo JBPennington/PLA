@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/JBPennington/PLA.svg?branch=master)](https://travis-ci.org/JBPennington/PLA)
+[![Build Status](https://travis-ci.org/JBPennington/PLA.svg?branch=master)](https://travis-ci.org/JBPennington/PLA) [![codecov](https://codecov.io/gh/JBPennington/PLA/branch/master/graph/badge.svg)](https://codecov.io/gh/JBPennington/PLA)
 
 # PLA
 
