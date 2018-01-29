@@ -29,7 +29,6 @@ matrix:
            # Misc
            - python-yaml
            - lcov
-#           - libopencv-dev
          sources:
            - ubuntu-toolchain-r-test
            - llvm-toolchain-precise-3.7
@@ -66,5 +65,17 @@ script:
      - ctest
 
 
+#after_success:
+#    - codecov -t fe09164d-c69e-47fb-91d1-965e75f4aa9e -X gcov
+
+language: cpp
+compiler:
+- g++
 after_success:
-    - codecov -t fe09164d-c69e-47fb-91d1-965e75f4aa9e -X gcov
+    # Creating report
+  - cd ${TRAVIS_BUILD_DIR}
+  - lcov --directory . --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+  - lcov --list coverage.info #debug info
+  # Uploading report to CodeCov
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
