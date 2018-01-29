@@ -23,7 +23,7 @@ matrix:
          packages:
            - gcc
            - g++
-           - gcov
+#           - gcov
            - clang
            - valgrind
            # Misc
