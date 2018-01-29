@@ -58,6 +58,15 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         set(BUILD_GMOCK ON)
         add_subdirectory(${PROJECT_LIBRARIES_DIR}/googletest)
 
+        if(CMAKE_COMPILER_IS_GNUCXX)
+            include(CodeCoverage)
+            setup_target_for_coverage(${PROJECT_NAME}_coverage tests coverage)
+        endif()
+
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage")
+
+
+
         add_executable(${PROJECT_EXE_TEST} ${SOURCE_FILES} ${HEADER_FILES} ${TEST_FILES})
         target_include_directories(${PROJECT_EXE_TEST} SYSTEM PRIVATE
                 ${BASEPATH}
@@ -66,6 +75,9 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         )
         target_link_libraries(${PROJECT_EXE_TEST} gtest_main gmock ${TEST_LIBRARIES}) # Use gtest’s main
         add_test(NAME ${PROJECT_EXE_TEST} COMMAND $<TARGET_FILE:${PROJECT_EXE_TEST}>)
+
+        include(CTest)
+        enable_testing()
 
     elseif (${LIB})
         message(STATUS "Lib mode selected")
