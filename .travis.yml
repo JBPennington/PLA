@@ -21,15 +21,15 @@ matrix:
       addons:
        apt:
          packages:
-           - gcc-4.8
-           - g++-4.8
-           - gcov-4.9
-           - clang-3.7
+           - gcc
+           - g++
+           - gcov
+           - clang
            - valgrind
            # Misc
            - python-yaml
            - lcov
-           - libopencv-dev
+#           - libopencv-dev
          sources:
            - ubuntu-toolchain-r-test
            - llvm-toolchain-precise-3.7
