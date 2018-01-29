@@ -367,7 +367,6 @@ static inline vec##n * mat##n##x##n##_add_r(mat##n##x##n A, mat##n##x##n const B
             A[row][col] += B[row][col]; \
         } \
     } \
-    vec##n * result = A; \
     return A; \
 } \
 static inline void mat##n##x##n##_sub_n(mat##n##x##n result, mat##n##x##n const A, mat##n##x##n const B) \

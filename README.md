@@ -38,8 +38,12 @@ A ctest executable "test_PLA" should've been made.
 
 ## Testing
 
-At the moment, there should be 100% code coverage. To test, run the followign...
+At the moment, there should be 100% code coverage. To test, run the following...
 
 ```
-./test_PLA
+ctest
+```
+-- or --
+```
+./bin/test_PLA
 ```
