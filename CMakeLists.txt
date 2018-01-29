@@ -18,6 +18,12 @@ project(${PROJECT_EXE_TEST})
 option(TEST         "Compile tests?"        OFF)
 option(LIB          "Build as lib?"         OFF)
 
+# Setting default folders
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# In CMakeModules I include code coverage for c++
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
 
 # Warnings and Defines
 add_definitions(
