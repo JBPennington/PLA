@@ -7,6 +7,12 @@ extern "C" {
 #include <iostream>
 #include <map>
 
+
+static const float PI   = static_cast<float>(M_PI);
+static const float PI_2 = static_cast<float>(M_PI_2);
+static const float PI_4 = static_cast<float>(M_PI_4);
+
+
 class Linear_Algebra_Misc_ : public testing::Test {
     void SetUp() {
 
@@ -15,7 +21,7 @@ class Linear_Algebra_Misc_ : public testing::Test {
 
     }
 public:
-    const float tolerance = 0.00000001f;
+    const float tolerance = 0.0000001f;
     mat2x2 Mat2_zero {{0,0},{0,0}};
     mat3x3 Mat3_zero {{0,0,0},{0,0,0},{0,0,0}};
     mat4x4 Mat4_zero {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
@@ -528,7 +534,7 @@ TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Return_Rotational_Mat_Test) {
     }
 }
 
-TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Trsanslate_Mat_Test) {
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Translate_Mat_Test) {
     mat4x4 mat4_expected {{0,1,2,4},{4,5,6,8},{8,9,10,12},{12,13,14,15}};
 
     mat4x4_translate(Mat4A, 1.0f, 1.0f, 1.0f);
@@ -536,6 +542,149 @@ TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Trsanslate_Mat_Test) {
     for (std::size_t row = 0; row < 4; ++row) {
         for (std::size_t col = 0; col < 4; ++col) {
             EXPECT_NEAR(mat4_expected[row][col], Mat4A[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_From_Vec_3_by_Vec3) {
+    vec3 a = {1, 2, 3};
+    vec3 b = {1, 2, 3};
+
+    mat4x4 mat4_expected {{ 1, 2, 3, 0},
+                          { 2, 4, 6, 0},
+                          { 3, 6, 9, 0},
+                          { 0, 0, 0, 0}};
+
+    mat4x4_from_vec3_mul_outer(Mat4A, a, b);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(mat4_expected[row][col], Mat4A[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Rotate_With_Angel_Axis) {
+    mat4x4 identity = IDENTITY4x4;
+    mat4x4 result   = IDENTITY4x4;
+    mat4x4 expected = IDENTITY4x4;
+
+    mat4x4_rotate(result, identity, 0, 0, 0, 0);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expected[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+
+    mat4x4 expect_x_rotation = {{  1, 0, 0, 0},
+                                {  0, 0,-1, 0},
+                                {  0, 1, 0, 0},
+                                {  0, 0, 0, 1}};
+
+    mat4x4_rotate(result, identity, 1.0f, 0, 0, PI_2);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expect_x_rotation[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+
+    mat4x4 expect_y_rotation = {{  0, 0, 1, 0},
+                                {  0, 1, 0, 0},
+                                { -1, 0, 0, 0},
+                                {  0, 0, 0, 1}};
+
+    mat4x4_rotate(result, identity, 0, 1, 0, PI_2);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expect_y_rotation[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+
+    mat4x4 expect_z_rotation = {{  0,-1, 0, 0},
+                                {  1, 0, 0, 0},
+                                {  0, 0, 1, 0},
+                                {  0, 0, 0, 1}};
+
+    mat4x4_rotate(result, identity, 0, 0, 1, PI_2);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expect_z_rotation[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Rotate_With_Direct_Rotation) {
+    mat4x4 identity = IDENTITY4x4;
+    mat4x4 result   = IDENTITY4x4;
+    mat4x4 expected = IDENTITY4x4;
+
+    mat4x4 expect_x_rotation = {{  1, 0, 0, 0},
+                                {  0, 0,-1, 0},
+                                {  0, 1, 0, 0},
+                                {  0, 0, 0, 1}};
+
+    mat4x4_rotate_about_x(result, identity, PI_2);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expect_x_rotation[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+
+    mat4x4 expect_y_rotation = {{  0, 0, 1, 0},
+                                {  0, 1, 0, 0},
+                                { -1, 0, 0, 0},
+                                {  0, 0, 0, 1}};
+
+    mat4x4_rotate_about_y(result, identity, PI_2);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expect_y_rotation[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+
+    mat4x4 expect_z_rotation = {{  0,-1, 0, 0},
+                                {  1, 0, 0, 0},
+                                {  0, 0, 1, 0},
+                                {  0, 0, 0, 1}};
+
+    mat4x4_rotate_about_z(result, identity, PI_2);
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expect_z_rotation[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+
+TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Inversion) {
+    mat4x4 result   = IDENTITY4x4;
+    mat4x4 test     = {
+        { 1, 3, 2, 4},
+        { 8, 3, 4, 5},
+        { 3, 5, 6, 0},
+        { 2, 1, 6, 3}
+    };
+
+    mat4x4_invert(result, test);
+
+    mat4x4 expected = {{  1, 0, 0, 0},
+                       {  0, 1, 0, 0},
+                       {  0, 0, 1, 0},
+                       {  0, 0, 0, 1}};
+
+    for (std::size_t row = 0; row < 4; ++row) {
+        for (std::size_t col = 0; col < 4; ++col) {
+            EXPECT_NEAR(expected[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
         }
     }
 }
