@@ -70,7 +70,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         add_executable(${PROJECT_EXE_TEST} ${SOURCE_FILES} ${HEADER_FILES} ${TEST_FILES})
         target_compile_options(${PROJECT_EXE_TEST}
                 PUBLIC
-                -Wall -g -O0) # -fprofile-arcs -ftest-coverage)
+                -Wall -g -O0 -fprofile-arcs -ftest-coverage)
         target_include_directories(${PROJECT_EXE_TEST} SYSTEM PRIVATE
                 ${BASEPATH}
                 ${PROJECT_LIBRARIES_DIR}/gtest/googletest/include
