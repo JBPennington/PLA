@@ -48,6 +48,7 @@ set(TEST_FILES
         pla/tests/linear_algebra_misc_tests.cpp
         pla/tests/linear_algebra_mat_mul_vec_tests.cpp
         pla/tests/linear_algebra_mat_mul_mat_tests.cpp
+        pla/tests/linear_algebra_quaternion_tests.cpp
 )
 
 
@@ -69,7 +70,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         add_executable(${PROJECT_EXE_TEST} ${SOURCE_FILES} ${HEADER_FILES} ${TEST_FILES})
         target_compile_options(${PROJECT_EXE_TEST}
                 PUBLIC
-                -Wall -g -O0 -fprofile-arcs -ftest-coverage)
+                -Wall -g -O0) # -fprofile-arcs -ftest-coverage)
         target_include_directories(${PROJECT_EXE_TEST} SYSTEM PRIVATE
                 ${BASEPATH}
                 ${PROJECT_LIBRARIES_DIR}/gtest/googletest/include

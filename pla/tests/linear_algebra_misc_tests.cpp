@@ -8,9 +8,7 @@ extern "C" {
 #include <map>
 
 
-static const float PI   = static_cast<float>(M_PI);
 static const float PI_2 = static_cast<float>(M_PI_2);
-static const float PI_4 = static_cast<float>(M_PI_4);
 
 
 class Linear_Algebra_Misc_ : public testing::Test {
@@ -623,7 +621,6 @@ TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Rotate_With_Angel_Axis) {
 TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Rotate_With_Direct_Rotation) {
     mat4x4 identity = IDENTITY4x4;
     mat4x4 result   = IDENTITY4x4;
-    mat4x4 expected = IDENTITY4x4;
 
     mat4x4 expect_x_rotation = {{  1, 0, 0, 0},
                                 {  0, 0,-1, 0},
@@ -667,26 +664,27 @@ TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Rotate_With_Direct_Rotation) {
 
 
 TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Inversion) {
+    float local_tolerance = 0.001;
+
     mat4x4 result   = IDENTITY4x4;
     mat4x4 test     = {
-        { 1, 3, 2, 4},
-        { 8, 3, 4, 5},
-        { 3, 5, 6, 0},
-        { 2, 1, 6, 3}
+        {0.4218f, 0.6557f, 0.6787f, 0.6555f},
+        {0.9157f, 0.0357f, 0.7577f, 0.1712f},
+        {0.7922f, 0.8491f, 0.7431f, 0.7060f},
+        {0.9595f, 0.9340f, 0.3922f, 0.0318f},
     };
 
     mat4x4_invert(result, test);
 
-    mat4x4 expected = {{  1, 0, 0, 0},
-                       {  0, 1, 0, 0},
-                       {  0, 0, 1, 0},
-                       {  0, 0, 0, 1}};
+    mat4x4 expected = {{ -4.2510f,  0.2757f,  3.9060f, -0.5772f},
+                       {  2.0134f, -0.7508f, -1.7446f,  1.2719f},
+                       {  5.9198f,  1.1647f, -5.8282f,  1.0980f},
+                       { -3.8823f, -0.6323f,  5.2662f, -2.0378f}};
 
     for (std::size_t row = 0; row < 4; ++row) {
         for (std::size_t col = 0; col < 4; ++col) {
-            EXPECT_NEAR(expected[row][col], result[row][col], tolerance) << " Row: " << row << " Col: " << col;
+            EXPECT_NEAR(expected[row][col], result[row][col], local_tolerance) << " Row: " << row << " Col: " << col;
         }
     }
 }
-
 
