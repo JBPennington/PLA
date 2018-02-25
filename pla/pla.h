@@ -63,27 +63,27 @@ static inline void vec##n##_sub(vec##n a, vec##n const b) \
     for(i=0; i<(n); ++i) \
         a[i] -= b[i]; \
 } \
-static inline void vec##n##_scale_n(vec##n r, vec##n const v, float const s) \
+static inline void vec##n##_scale_n(vec##n r, vec##n const v, float s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = v[i] * s; \
 } \
-static inline float* vec##n##_scale_rn(vec##n r, vec##n const v, float const s) \
+static inline float* vec##n##_scale_rn(vec##n r, vec##n const v, float s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = v[i] * s; \
     return r; \
 } \
-static inline float* vec##n##_scale_r(vec##n v, float const s) \
+static inline float* vec##n##_scale_r(vec##n v, float s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         v[i] *= s; \
     return v; \
 } \
-static inline void vec##n##_scale(vec##n v, float const s) \
+static inline void vec##n##_scale(vec##n v, float s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
@@ -397,7 +397,7 @@ static inline vec##n * mat##n##x##n##_sub_r(mat##n##x##n A, mat##n##x##n const B
     } \
     return A; \
 } \
-static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n const A, const float scale) \
+static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n const A, float scale) \
 { \
     int row, col; \
     for (row=0; row<n; ++row) { \
@@ -406,7 +406,7 @@ static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n cons
         } \
     } \
 }\
-static inline void mat##n##x##n##_scale(mat##n##x##n A, const float scale) \
+static inline void mat##n##x##n##_scale(mat##n##x##n A, float scale) \
 { \
     int row, col; \
     for (row=0; row<n; ++row) { \
@@ -415,7 +415,7 @@ static inline void mat##n##x##n##_scale(mat##n##x##n A, const float scale) \
         } \
     } \
 } \
-static inline vec##n * mat##n##x##n##_scale_r(mat##n##x##n A, const float scale) \
+static inline vec##n * mat##n##x##n##_scale_r(mat##n##x##n A, float scale) \
 { \
     int row, col; \
     for (row=0; row<n; ++row) { \
@@ -561,8 +561,7 @@ static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, const vec3 a, const vec3
 
 // Axis Angle Rotation with Radian
 static inline void mat4x4_rotate(mat4x4 R, mat4x4 const M,
-                                 const float x, const float y, const float z,
-                                 const float angle) {
+                                 float x, float y, float z, float angle) {
     float sin_angle     = sinf(angle);
     float cos_angle     = cosf(angle);
     vec3  rotation_axis = {x, y, z};
@@ -597,7 +596,7 @@ static inline void mat4x4_rotate(mat4x4 R, mat4x4 const M,
 }
 
 
-static inline void mat4x4_rotate_about_x(mat4x4 Q, const mat4x4 M, const float angle) {
+static inline void mat4x4_rotate_about_x(mat4x4 Q, const mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
     mat4x4 R = {
@@ -610,7 +609,7 @@ static inline void mat4x4_rotate_about_x(mat4x4 Q, const mat4x4 M, const float a
 }
 
 
-static inline void mat4x4_rotate_about_y(mat4x4 Q, const mat4x4 M, const float angle) {
+static inline void mat4x4_rotate_about_y(mat4x4 Q, const mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
     mat4x4 R = {
@@ -623,7 +622,7 @@ static inline void mat4x4_rotate_about_y(mat4x4 Q, const mat4x4 M, const float a
 }
 
 
-static inline void mat4x4_rotate_about_z(mat4x4 Q, const mat4x4 M, const float angle) {
+static inline void mat4x4_rotate_about_z(mat4x4 Q, const mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
     mat4x4 R = {
