@@ -36,19 +36,18 @@ set(HEADER_FILES
 
 
 set(TEST_FILES
-        pla/tests/linear_algebra_tests.cpp
-        pla/tests/linear_algebra_addition_tests.cpp
-        pla/tests/linear_algebra_subtraction_tests.cpp
-        pla/tests/linear_algebra_scalar_tests.cpp
-        pla/tests/linear_algebra_mul_inner_tests.cpp
-        pla/tests/linear_algebra_norm_tests.cpp
-        pla/tests/linear_algebra_normalize_tests.cpp
-        pla/tests/linear_algebra_min_max_tests.cpp
-        pla/tests/linear_algebra_copy_tests.cpp
-        pla/tests/linear_algebra_misc_tests.cpp
-        pla/tests/linear_algebra_mat_mul_vec_tests.cpp
-        pla/tests/linear_algebra_mat_mul_mat_tests.cpp
-        pla/tests/linear_algebra_quaternion_tests.cpp
+        pla/tests/addition.cpp
+        pla/tests/subtraction.cpp
+        pla/tests/scaling.cpp
+        pla/tests/vector_inner_multiplication.cpp
+        pla/tests/norm.cpp
+        pla/tests/normalizing.cpp
+        pla/tests/min_max.cpp
+        pla/tests/copy.cpp
+        pla/tests/misc.cpp
+        pla/tests/matrix_vector_multiplication.cpp
+        pla/tests/matrix_matrix_multiplication.cpp
+        pla/tests/quaternion.cpp
 )
 
 
