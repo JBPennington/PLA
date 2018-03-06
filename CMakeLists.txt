@@ -6,6 +6,9 @@ set(BASEPATH ${CMAKE_SOURCE_DIR}/src)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
+set(CMAKE_C_COMPILER gcc-7)
+set(CMAKE_CXX_COMPILER g++-7)
+
 # Project Strings
 set(PROJECT_LIB pla)
 set(PROJECT_EXE_TEST        test_PLA)

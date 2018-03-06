@@ -18,58 +18,58 @@ static inline void vec##n##_zero(vec##n a) \
     for(i=0; i<(n); ++i) \
         a[i] = 0; \
 } \
-static inline void vec##n##_add_n(vec##n r, vec##n const a, vec##n const b) \
+static inline void vec##n##_add_n(vec##n r, vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = a[i] + b[i]; \
 } \
-static inline float* vec##n##_add_rn(vec##n r, vec##n const a, vec##n const b) \
+static inline float* vec##n##_add_rn(vec##n r, vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = a[i] + b[i]; \
     return r; \
 } \
-static inline float* vec##n##_add_r(vec##n a, vec##n const b) \
+static inline float* vec##n##_add_r(vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         a[i] += b[i]; \
     return a; \
 } \
-static inline void vec##n##_add(vec##n a, vec##n const b) \
+static inline void vec##n##_add(vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         a[i] += b[i]; \
 } \
-static inline void vec##n##_sub_n(vec##n r, vec##n const a, vec##n const b) \
+static inline void vec##n##_sub_n(vec##n r, vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = a[i] - b[i]; \
 } \
-static inline float* vec##n##_sub_r(vec##n a, vec##n const b) \
+static inline float* vec##n##_sub_r(vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         a[i] -= b[i]; \
     return a; \
 } \
-static inline void vec##n##_sub(vec##n a, vec##n const b) \
+static inline void vec##n##_sub(vec##n a, vec##n b) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         a[i] -= b[i]; \
 } \
-static inline void vec##n##_scale_n(vec##n r, vec##n const v, float s) \
+static inline void vec##n##_scale_n(vec##n r, vec##n v, float s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
         r[i] = v[i] * s; \
 } \
-static inline float* vec##n##_scale_rn(vec##n r, vec##n const v, float s) \
+static inline float* vec##n##_scale_rn(vec##n r, vec##n v, float s) \
 { \
     int i; \
     for(i=0; i<(n); ++i) \
@@ -89,7 +89,7 @@ static inline void vec##n##_scale(vec##n v, float s) \
     for(i=0; i<(n); ++i) \
         v[i] *= s; \
 } \
-static inline float vec##n##_mul_inner(vec##n const a, vec##n const b) \
+static inline float vec##n##_mul_inner(vec##n a, vec##n b) \
 { \
     float p = 0.0f; \
     int i; \
@@ -97,11 +97,11 @@ static inline float vec##n##_mul_inner(vec##n const a, vec##n const b) \
         p += b[i]*a[i]; \
     return p; \
 } \
-static inline float vec##n##_norm(vec##n const v) \
+static inline float vec##n##_norm(vec##n v) \
 { \
     return sqrtf(vec##n##_mul_inner(v,v)); \
 } \
-static inline void vec##n##_normalize_n(vec##n r, vec##n const v) \
+static inline void vec##n##_normalize_n(vec##n r, vec##n v) \
 { \
     float k = 1.0 / vec##n##_norm(v); \
     vec##n##_scale_n(r, v, k); \
@@ -144,20 +144,20 @@ LINMATH_H_DEFINE_VEC(6)
 #define EMPTYVEC3 {0,0,0}
 
 
-static inline void vec3_mul_cross_n(vec3 r, vec3 const a, vec3 const b) {
+static inline void vec3_mul_cross_n(vec3 r, vec3 a, vec3 b) {
     r[0] = a[1] * b[2] - a[2] * b[1];
     r[1] = a[2] * b[0] - a[0] * b[2];
     r[2] = a[0] * b[1] - a[1] * b[0];
 }
 
-static inline float * vec3_mul_cross_rn(vec3 r, vec3 const a, vec3 const b) {
+static inline float * vec3_mul_cross_rn(vec3 r, vec3 a, vec3 b) {
     r[0] = a[1] * b[2] - a[2] * b[1];
     r[1] = a[2] * b[0] - a[0] * b[2];
     r[2] = a[0] * b[1] - a[1] * b[0];
     return r;
 }
 
-static inline float * vec3_mul_cross_r(vec3 a, vec3 const b) {
+static inline float * vec3_mul_cross_r(vec3 a, vec3 b) {
     vec3 result = {0,0,0};
     result[0] = a[1] * b[2] - a[2] * b[1];
     result[1] = a[2] * b[0] - a[0] * b[2];
@@ -166,7 +166,7 @@ static inline float * vec3_mul_cross_r(vec3 a, vec3 const b) {
     return a;
 }
 
-static inline void vec3_mul_cross(vec3 a, vec3 const b) {
+static inline void vec3_mul_cross(vec3 a, vec3 b) {
     vec3 result = {0,0,0};
     result[0] = a[1] * b[2] - a[2] * b[1];
     result[1] = a[2] * b[0] - a[0] * b[2];
@@ -174,7 +174,7 @@ static inline void vec3_mul_cross(vec3 a, vec3 const b) {
     vec3_copy(a, result);
 }
 
-static inline void vec3_reflect_n(vec3 r, vec3 const v, vec3 const n) {
+static inline void vec3_reflect_n(vec3 r, vec3 v, vec3 n) {
     float p = 2.f * vec3_mul_inner(v, n);
     int i;
     for (i = 0; i < 3; ++ i) {
@@ -182,7 +182,7 @@ static inline void vec3_reflect_n(vec3 r, vec3 const v, vec3 const n) {
     }
 }
 
-static inline float * vec3_reflect_r(vec3 v, vec3 const n) {
+static inline float * vec3_reflect_r(vec3 v, vec3 n) {
     float p = 2.f * vec3_mul_inner(v, n);
     vec3 result = {0, 0, 0};
     int i;
@@ -193,7 +193,7 @@ static inline float * vec3_reflect_r(vec3 v, vec3 const n) {
     return v;
 }
 
-static inline void vec3_reflect(vec3 v, vec3 const n) {
+static inline void vec3_reflect(vec3 v, vec3 n) {
     float p = 2.f * vec3_mul_inner(v, n);
     vec3 result = {0, 0, 0};
     int i;
@@ -261,53 +261,53 @@ static inline float * vec4_reflect_r(vec4 v, vec4 n) {
 
 #define LINMATH_H_DEFINE_SQUARE_MAT(n) \
 typedef vec##n mat##n##x##n[n]; \
-static inline void mat##n##x##n##_copy(mat##n##x##n A, mat##n##x##n const B) { \
+static inline void mat##n##x##n##_copy(mat##n##x##n A, mat##n##x##n B) { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] = B[row][col]; \
         } \
     } \
 } \
 static inline void mat##n##x##n##_identity(mat##n##x##n A) { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] = (row == col) ? 1.0f : 0.0f; \
         } \
     } \
 } \
 static inline vec##n * mat##n##x##n##_identity_r(mat##n##x##n A) { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] = (row == col) ? 1.0f : 0.0f; \
         } \
     } \
     return A; \
 } \
-static inline void mat##n##x##n##_row(vec##n row, mat##n##x##n const A, unsigned int row_index) { \
+static inline void mat##n##x##n##_row(vec##n row, mat##n##x##n A, unsigned int row_index) { \
     unsigned int col; \
-    for (col=0; col<n; ++col) { \
+    for (col=0; col<(n); ++col) { \
         row[col] = A[row_index][col]; \
     } \
 } \
-static inline float * mat##n##x##n##_row_r(vec##n row, mat##n##x##n const A, unsigned int row_index) { \
+static inline float * mat##n##x##n##_row_r(vec##n row, mat##n##x##n A, unsigned int row_index) { \
     unsigned int col; \
-    for (col=0; col<n; ++col) { \
+    for (col=0; col<(n); ++col) { \
         row[col] = A[row_index][col]; \
     } \
     return row; \
 } \
-static inline void mat##n##x##n##_col(vec##n col, mat##n##x##n const A, unsigned int col_index) { \
+static inline void mat##n##x##n##_col(vec##n col, mat##n##x##n A, unsigned int col_index) { \
     unsigned int row; \
-    for (row=0; row<n; ++row) { \
+    for (row=0; row<(n); ++row) { \
         col[row] = A[row][col_index]; \
     } \
 } \
-static inline float * mat##n##x##n##_col_r(vec##n col, mat##n##x##n const A, unsigned int col_index) { \
+static inline float * mat##n##x##n##_col_r(vec##n col, mat##n##x##n A, unsigned int col_index) { \
     unsigned int row; \
-    for (row=0; row<n; ++row) { \
+    for (row=0; row<(n); ++row) { \
         col[row] = A[row][col_index]; \
     } \
     return col; \
@@ -315,8 +315,8 @@ static inline float * mat##n##x##n##_col_r(vec##n col, mat##n##x##n const A, uns
 static inline void mat##n##x##n##_transpose(mat##n##x##n A) { \
     mat##n##x##n temp; \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             temp[row][col] = A[col][row]; \
         } \
     } \
@@ -325,8 +325,8 @@ static inline void mat##n##x##n##_transpose(mat##n##x##n A) { \
 static inline vec##n * mat##n##x##n##_transpose_r(mat##n##x##n A) { \
     mat##n##x##n temp; \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             temp[row][col] = A[col][row]; \
         } \
     } \
@@ -335,73 +335,73 @@ static inline vec##n * mat##n##x##n##_transpose_r(mat##n##x##n A) { \
 } \
 static inline void mat##n##x##n##_transpose_n(mat##n##x##n M, mat##n##x##n A) { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             M[row][col] = A[col][row]; \
         } \
     } \
 } \
-static inline void mat##n##x##n##_add_n(mat##n##x##n result, mat##n##x##n const A, mat##n##x##n const B) \
+static inline void mat##n##x##n##_add_n(mat##n##x##n result, mat##n##x##n A, mat##n##x##n B) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             result[row][col] = A[row][col]+B[row][col]; \
         } \
     } \
 }\
-static inline void mat##n##x##n##_add(mat##n##x##n A, mat##n##x##n const B) \
+static inline void mat##n##x##n##_add(mat##n##x##n A, mat##n##x##n B) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] += B[row][col]; \
         } \
     } \
 } \
-static inline vec##n * mat##n##x##n##_add_r(mat##n##x##n A, mat##n##x##n const B) \
+static inline vec##n * mat##n##x##n##_add_r(mat##n##x##n A, mat##n##x##n B) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] += B[row][col]; \
         } \
     } \
     return A; \
 } \
-static inline void mat##n##x##n##_sub_n(mat##n##x##n result, mat##n##x##n const A, mat##n##x##n const B) \
+static inline void mat##n##x##n##_sub_n(mat##n##x##n result, mat##n##x##n A, mat##n##x##n B) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             result[row][col] = A[row][col]-B[row][col]; \
         } \
     } \
 }\
-static inline void mat##n##x##n##_sub(mat##n##x##n A, mat##n##x##n const B) \
+static inline void mat##n##x##n##_sub(mat##n##x##n A, mat##n##x##n B) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] -= B[row][col]; \
         } \
     } \
 } \
-static inline vec##n * mat##n##x##n##_sub_r(mat##n##x##n A, mat##n##x##n const B) \
+static inline vec##n * mat##n##x##n##_sub_r(mat##n##x##n A, mat##n##x##n B) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] -= B[row][col]; \
         } \
     } \
     return A; \
 } \
-static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n const A, float scale) \
+static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n A, float scale) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             result[row][col] = A[row][col] * scale; \
         } \
     } \
@@ -409,8 +409,8 @@ static inline void mat##n##x##n##_scale_n(mat##n##x##n result, mat##n##x##n cons
 static inline void mat##n##x##n##_scale(mat##n##x##n A, float scale) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] *= scale; \
         } \
     } \
@@ -418,89 +418,89 @@ static inline void mat##n##x##n##_scale(mat##n##x##n A, float scale) \
 static inline vec##n * mat##n##x##n##_scale_r(mat##n##x##n A, float scale) \
 { \
     int row, col; \
-    for (row=0; row<n; ++row) { \
-        for (col=0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col=0; col<(n); ++col) { \
             A[row][col] *= scale; \
         } \
     } \
     return A; \
 } \
-static inline void mat##n##x##n##_mul_vec##n##_n(vec##n result, mat##n##x##n const A, vec##n const B) { \
+static inline void mat##n##x##n##_mul_vec##n##_n(vec##n result, mat##n##x##n A, vec##n B) { \
     int row, col; \
-    for(row=0; row<n; ++row){ \
+    for(row=0; row<(n); ++row){ \
         result[row] = 0.0f; \
-        for(col=0; col<n; ++col){ \
+        for(col=0; col<(n); ++col){ \
             result[row] += A[row][col] * B[col]; \
         } \
     } \
 } \
-static inline float * mat##n##x##n##_mul_vec##n##_r(mat##n##x##n const A, vec##n B) { \
+static inline float * mat##n##x##n##_mul_vec##n##_r(mat##n##x##n A, vec##n B) { \
     vec##n result; \
     int row, col; \
-    for(row=0; row<n; ++row){ \
+    for(row=0; row<(n); ++row){ \
         result[row] = 0.0f; \
-        for(col=0; col<n; ++col){ \
+        for(col=0; col<(n); ++col){ \
             result[row] += A[row][col] * B[col]; \
         } \
     } \
     vec##n##_copy(B,result); \
     return B; \
 } \
-static inline float * mat##n##x##n##_mul_vec##n##_rn(vec##n result, mat##n##x##n const A, vec##n const B) { \
+static inline float * mat##n##x##n##_mul_vec##n##_rn(vec##n result, mat##n##x##n A, vec##n B) { \
     int row, col; \
-    for(row=0; row<n; ++row){ \
+    for(row=0; row<(n); ++row){ \
         result[row] = 0.0f; \
-        for(col=0; col<n; ++col){ \
+        for(col=0; col<(n); ++col){ \
             result[row] += A[row][col] * B[col]; \
         } \
     } \
     return result; \
 }\
-static inline void mat##n##x##n##_mul(mat##n##x##n a, mat##n##x##n const b) { \
+static inline void mat##n##x##n##_mul(mat##n##x##n a, mat##n##x##n b) { \
     mat##n##x##n temp;\
     unsigned int row, col, keep; \
-    for (row=0; row<n; ++row) { \
-        for (col = 0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col = 0; col<(n); ++col) { \
             temp[row][col] = 0.0f; \
-            for (keep = 0; keep<n; ++keep) { \
+            for (keep = 0; keep<(n); ++keep) { \
                 temp[row][col] += a[row][keep] * b[keep][col]; \
             } \
         } \
     } \
     mat##n##x##n##_copy(a, temp); \
 } \
-static inline void mat##n##x##n##_mul_n(mat##n##x##n result, mat##n##x##n const a, mat##n##x##n const b) { \
+static inline void mat##n##x##n##_mul_n(mat##n##x##n result, mat##n##x##n a, mat##n##x##n b) { \
     mat##n##x##n temp;\
     unsigned int row, col, keep; \
-    for (row=0; row<n; ++row) { \
-        for (col = 0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col = 0; col<(n); ++col) { \
             temp[row][col] = 0.0f; \
-            for (keep = 0; keep<n; ++keep) { \
+            for (keep = 0; keep<(n); ++keep) { \
                 temp[row][col] += a[row][keep] * b[keep][col]; \
             } \
         } \
     } \
     mat##n##x##n##_copy(result, temp); \
 } \
-static inline vec##n * mat##n##x##n##_mul_nr(mat##n##x##n result, mat##n##x##n const a, mat##n##x##n const b) { \
+static inline vec##n * mat##n##x##n##_mul_nr(mat##n##x##n result, mat##n##x##n a, mat##n##x##n b) { \
     unsigned int row, col, keep; \
-    for (row=0; row<n; ++row) { \
-        for (col = 0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col = 0; col<(n); ++col) { \
             result[row][col] = 0.0f; \
-            for (keep = 0; keep<n; ++keep) { \
+            for (keep = 0; keep<(n); ++keep) { \
                 result[row][col] += a[row][keep] * b[keep][col]; \
             } \
         } \
     } \
     return result; \
 } \
-static inline vec##n * mat##n##x##n##_mul_r(mat##n##x##n a, mat##n##x##n const b) { \
+static inline vec##n * mat##n##x##n##_mul_r(mat##n##x##n a, mat##n##x##n b) { \
     mat##n##x##n temp;\
     unsigned int row, col, keep; \
-    for (row=0; row<n; ++row) { \
-        for (col = 0; col<n; ++col) { \
+    for (row=0; row<(n); ++row) { \
+        for (col = 0; col<(n); ++col) { \
             temp[row][col] = 0.0f; \
-            for (keep = 0; keep<n; ++keep) { \
+            for (keep = 0; keep<(n); ++keep) { \
                 temp[row][col] += a[row][keep] * b[keep][col]; \
             } \
         } \
@@ -521,7 +521,7 @@ LINMATH_H_DEFINE_SQUARE_MAT(6)
 #define IDENTITY4x4 {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 
 
-static inline void mat4x4_get_rotational(mat3x3 M, mat4x4 const A) {
+static inline void mat4x4_get_rotational(mat3x3 M, mat4x4 A) {
     int row, col;
     for (row=0; row<3; ++row) {
         for(col=0; col<3; ++col) {
@@ -549,7 +549,7 @@ static inline void mat4x4_translate(mat4x4 T, float x, float y, float z) {
 
 // This is generically written but its intent is to create a
 // rotation matrix from an axis-angle representation of the rotation
-static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, const vec3 a, const vec3 b) {
+static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b) {
     int row, col;
     for (row=0; row<4; ++row) {
         for (col=0; col<4; ++col) {
@@ -560,7 +560,7 @@ static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, const vec3 a, const vec3
 
 
 // Axis Angle Rotation with Radian
-static inline void mat4x4_rotate(mat4x4 R, mat4x4 const M,
+static inline void mat4x4_rotate(mat4x4 R, mat4x4 M,
                                  float x, float y, float z, float angle) {
     float sin_angle     = sinf(angle);
     float cos_angle     = cosf(angle);
@@ -596,7 +596,7 @@ static inline void mat4x4_rotate(mat4x4 R, mat4x4 const M,
 }
 
 
-static inline void mat4x4_rotate_about_x(mat4x4 Q, const mat4x4 M, float angle) {
+static inline void mat4x4_rotate_about_x(mat4x4 Q, mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
     mat4x4 R = {
@@ -609,7 +609,7 @@ static inline void mat4x4_rotate_about_x(mat4x4 Q, const mat4x4 M, float angle) 
 }
 
 
-static inline void mat4x4_rotate_about_y(mat4x4 Q, const mat4x4 M, float angle) {
+static inline void mat4x4_rotate_about_y(mat4x4 Q, mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
     mat4x4 R = {
@@ -622,7 +622,7 @@ static inline void mat4x4_rotate_about_y(mat4x4 Q, const mat4x4 M, float angle) 
 }
 
 
-static inline void mat4x4_rotate_about_z(mat4x4 Q, const mat4x4 M, float angle) {
+static inline void mat4x4_rotate_about_z(mat4x4 Q, mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
     mat4x4 R = {
@@ -745,7 +745,7 @@ static inline void quat_conj(quat r, quat q) {
 }
 
 
-static inline void quat_from_angle_axis(quat r, float angle, const vec3 axis) {
+static inline void quat_from_angle_axis(quat r, float angle, vec3 axis) {
     vec3 v = EMPTYVEC3;
     vec3_scale_n(v, axis, sinf(angle / 2));
     int i;
