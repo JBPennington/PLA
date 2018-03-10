@@ -6,6 +6,7 @@ extern "C" {
 #include <gtest/gtest.h>
 #include <iostream>
 #include <map>
+#include <chrono>
 
 
 static const float PI_2 = static_cast<float>(M_PI_2);
@@ -20,6 +21,8 @@ class Linear_Algebra_Misc_ : public testing::Test {
     }
 public:
     const float tolerance = 0.0000001f;
+    vec3   Vec3A     {0.0f,1.0f,2.0f};
+    vec3   Vec3B     {3.0f,4.0f,5.0f};
     mat2x2 Mat2_zero {{0,0},{0,0}};
     mat3x3 Mat3_zero {{0,0,0},{0,0,0},{0,0,0}};
     mat4x4 Mat4_zero {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
@@ -43,11 +46,8 @@ public:
 };
 
 TEST_F(Linear_Algebra_Misc_, Vec3_Cross_Multiplication_Set_New_Value_Test) {
-    vec3 a = {0, 1, 2};
-    vec3 b = {3, 4, 5};
-
-    vec3 result = {0,0,0};
-    vec3_mul_cross_n(result, a, b);
+    vec3 result = ZERO3;
+    vec3_mul_cross_n(result, Vec3A, Vec3B);
 
     vec3 expect = {-3, 6, -3};
 
@@ -58,24 +58,18 @@ TEST_F(Linear_Algebra_Misc_, Vec3_Cross_Multiplication_Set_New_Value_Test) {
 }
 
 TEST_F(Linear_Algebra_Misc_, Vec3_Cross_Multiplication_Set_First_Test) {
-    vec3 a = {0, 1, 2};
-    vec3 b = {3, 4, 5};
-
-    vec3_mul_cross(a, b);
+    vec3_mul_cross(Vec3A, Vec3B);
 
     vec3 expect = {-3, 6, -3};
 
     uint32_t iter;
     for (iter=0; iter<3; ++iter) {
-        EXPECT_EQ(expect[iter], a[iter]);
+        EXPECT_EQ(expect[iter], Vec3A[iter]);
     }
 }
 
 TEST_F(Linear_Algebra_Misc_, Vec3_Cross_Multiplication_Set_First_And_Return_Test) {
-    vec3 a = {0, 1, 2};
-    vec3 b = {3, 4, 5};
-
-    float * result = vec3_mul_cross_r(a, b);
+    float * result = vec3_mul_cross_r(Vec3A, Vec3B);
 
     vec3 expect = {-3, 6, -3};
 
@@ -688,3 +682,34 @@ TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Inversion) {
     }
 }
 
+
+TEST_F(Linear_Algebra_Misc_, Six_Square_Mat_Inversion) {
+    float local_tolerance = 0.001;
+
+    mat6x6 result   = IDENTITY6x6;
+    mat6x6 test     = {
+        {0.6948f, 0.7655f, 0.7094f, 0.1190f, 0.7513f, 0.5472f},
+        {0.3171f, 0.7952f, 0.7547f, 0.4984f, 0.2551f, 0.1386f},
+        {0.9502f, 0.1869f, 0.2760f, 0.9597f, 0.5060f, 0.1493f},
+        {0.0344f, 0.4898f, 0.6797f, 0.3404f, 0.6991f, 0.2575f},
+        {0.4387f, 0.4456f, 0.6551f, 0.5853f, 0.8909f, 0.8407f},
+        {0.3816f, 0.6463f, 0.1626f, 0.2238f, 0.9593f, 0.2543f}
+    };
+
+    mat6x6_invert(result, test);
+
+    mat6x6 expected = {
+        { 1.3333f, -0.5294f,  0.7451f, -0.3515f, -0.6822f, -0.4067f},
+        {-0.6237f,  1.8119f, -0.7915f, -1.7150f,  0.3710f,  1.3294f},
+        { 1.1307f, -0.6510f,  0.3531f,  2.0599f, -0.8294f, -1.6294f},
+        {-1.5504f,  0.9408f,  0.3148f, -0.4335f,  0.8260f,  0.3467f},
+        { 0.1449f, -1.2500f,  0.3150f,  1.5341f, -0.5662f,  0.5031f},
+        {-0.3205f,  0.4928f, -0.7974f, -1.8365f,  2.0201f,  0.0028f}
+    };
+
+    for (std::size_t row = 0; row < 6; ++row) {
+        for (std::size_t col = 0; col < 6; ++col) {
+            EXPECT_NEAR(expected[row][col], result[row][col], local_tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}

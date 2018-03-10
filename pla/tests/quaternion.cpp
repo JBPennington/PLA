@@ -188,7 +188,7 @@ TEST_F(Linear_Algebra_Quat_, Quat_Normalize) {
 
 
 TEST_F(Linear_Algebra_Quat_, Quat_Mul_Vec3_New) {
-    vec3 result = EMPTYVEC3;
+    vec3 result = ZERO3;
     vec3 axis = {0.0f, 0.5f, 0.0f};
 
     quat_mul_vec3(result, QuatA, axis);
