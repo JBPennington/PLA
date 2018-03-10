@@ -657,6 +657,54 @@ TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Rotate_With_Direct_Rotation) {
 }
 
 
+TEST_F(Linear_Algebra_Misc_, Two_Square_Mat_Inversion) {
+    float local_tolerance = 0.001;
+
+    mat2x2 result   = IDENTITY2x2;
+    mat2x2 test     = {
+        {0.4218f, 0.6557f},
+        {0.9157f, 0.0357f},
+    };
+
+    mat2x2_invert(result, test);
+
+    mat2x2 expected = {
+        { -0.0610f,  1.1202f},
+        {  1.5643f, -0.7206f}
+    };
+
+    for (std::size_t row = 0; row < 2; ++row) {
+        for (std::size_t col = 0; col < 2; ++col) {
+            EXPECT_NEAR(expected[row][col], result[row][col], local_tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+
+TEST_F(Linear_Algebra_Misc_, Three_Square_Mat_Inversion) {
+    float local_tolerance = 0.001;
+
+    mat3x3 result   = IDENTITY3x3;
+    mat3x3 test     = {
+        {0.4218f, 0.6557f, 0.6787f},
+        {0.9157f, 0.0357f, 0.7577f},
+        {0.7922f, 0.8491f, 0.7431f},
+    };
+
+    mat3x3_invert(result, test);
+
+    mat3x3 expected = {{ -3.1514f,  0.4549f,  2.4144f},
+                       { -0.4098f, -1.1456f,  1.5423f},
+                       {  3.8278f,  0.8240f, -2.9906f}};
+
+    for (std::size_t row = 0; row < 3; ++row) {
+        for (std::size_t col = 0; col < 3; ++col) {
+            EXPECT_NEAR(expected[row][col], result[row][col], local_tolerance) << " Row: " << row << " Col: " << col;
+        }
+    }
+}
+
+
 TEST_F(Linear_Algebra_Misc_, Four_Square_Mat_Inversion) {
     float local_tolerance = 0.001;
 

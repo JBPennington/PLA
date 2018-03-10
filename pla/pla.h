@@ -832,6 +832,16 @@ static inline void mat6x6_get_sub_mat3x3(mat3x3 sub, mat6x6 mat, unsigned int st
     }
 }
 
+static inline void mat4x4_get_sub_mat2x2(mat2x2 sub, mat4x4 mat, unsigned int start_row,
+                                         unsigned int end_row, unsigned int start_col, unsigned int end_col)
+{
+    unsigned int mat_row, mat_col, sub_row, sub_col;
+    for (mat_row=start_row, sub_row=0; mat_row<end_row; ++mat_row, ++sub_row) {
+        for (mat_col=start_col, sub_col=0; mat_col<end_col; ++mat_col, ++sub_col) {
+            sub[sub_row][sub_col] = mat[mat_row][mat_col];
+        }
+    }
+}
 
 static inline void combine_mat3x3_to_mat6x6(mat6x6 mat, mat3x3 a, mat3x3 b, mat3x3 c, mat3x3 d)
 {
@@ -846,36 +856,54 @@ static inline void combine_mat3x3_to_mat6x6(mat6x6 mat, mat3x3 a, mat3x3 b, mat3
     }
 }
 
+static inline void combine_mat2x2_to_mat4x4(mat4x4 mat, mat2x2 a, mat2x2 b, mat2x2 c, mat2x2 d)
+{
+    unsigned int row, col;
+    for (row=0; row<2; ++row) {
+        for (col=0; col<2; ++col) {
+            mat[  row][  col] = a[row][col];
+            mat[  row][col+2] = b[row][col];
+            mat[row+2][  col] = c[row][col];
+            mat[row+2][col+2] = d[row][col];
+        }
+    }
+}
+
+static inline void mat2x2_invert(mat2x2 T, mat2x2 M)
+{
+    float det     = M[0][0]*M[1][1] - M[1][0]*M[0][1];
+    float inv_det = 1.0f/det;
+
+    T[0][0] =  inv_det * M[1][1];
+    T[1][0] = -inv_det * M[1][0];
+    T[0][1] = -inv_det * M[0][1];
+    T[1][1] =  inv_det * M[0][0];
+}
+
 
 static inline void mat3x3_invert(mat3x3 T, mat3x3 M)
 {
-    float a0 = M[0][0];
-    float a1 = M[1][0];
-    float a2 = M[2][0];
-    float b0 = M[0][1];
-    float b1 = M[1][1];
-    float b2 = M[2][1];
-    float c0 = M[0][2];
-    float c1 = M[1][2];
-    float c2 = M[2][2];
-    float t2 = a0*b1*c2;
-    float t3 = a1*b2*c0;
-    float t4 = a2*b0*c1;
-    float t7 = a0*b2*c1;
-    float t8 = a1*b0*c2;
-    float t9 = a2*b1*c0;
-    float t5 = t2+t3+t4-t7-t8-t9;
-    float t6 = 1.0f/t5;
+    float A       =  (M[1][1]*M[2][2]-M[1][2]*M[2][1]);
+    float B       = -(M[1][0]*M[2][2]-M[1][2]*M[2][0]);
+    float C       =  (M[1][0]*M[2][1]-M[1][1]*M[2][0]);
+    float D       = -(M[0][1]*M[2][2]-M[0][2]*M[2][1]);
+    float E       =  (M[0][0]*M[2][2]-M[0][2]*M[2][0]);
+    float F       = -(M[0][0]*M[2][1]-M[0][1]*M[2][0]);
+    float G       =  (M[0][1]*M[1][2]-M[0][2]*M[1][1]);
+    float H       = -(M[0][0]*M[1][2]-M[0][2]*M[1][0]);
+    float I       =  (M[0][0]*M[1][1]-M[0][1]*M[1][0]);
+    float det     = M[0][0]*A + M[0][1]*B + M[0][2]*C;
+    float inv_det = 1.0f/det;
 
-    T[0][0] =  t6*(b1*c2-b2*c1);
-    T[1][0] = -t6*(a1*c2-a2*c1);
-    T[2][0] =  t6*(a1*b2-a2*b1);
-    T[0][1] = -t6*(b0*c2-b2*c0);
-    T[1][1] =  t6*(a0*c2-a2*c0);
-    T[2][1] = -t6*(a0*b2-a2*b0);
-    T[0][2] =  t6*(b0*c1-b1*c0);
-    T[1][2] = -t6*(a0*c1-a1*c0);
-    T[2][2] =  t6*(a0*b1-a1*b0);
+    T[0][0] = inv_det * A;
+    T[1][0] = inv_det * B;
+    T[2][0] = inv_det * C;
+    T[0][1] = inv_det * D;
+    T[1][1] = inv_det * E;
+    T[2][1] = inv_det * F;
+    T[0][2] = inv_det * G;
+    T[1][2] = inv_det * H;
+    T[2][2] = inv_det * I;
 }
 
 
@@ -919,6 +947,58 @@ static inline void mat4x4_invert(mat4x4 T, mat4x4 M) {
     T[3][1] = (  M[0][0] * c[3] - M[0][1] * c[1] + M[0][2] * c[0]) * idet;
     T[3][2] = (- M[3][0] * s[3] + M[3][1] * s[1] - M[3][2] * s[0]) * idet;
     T[3][3] = (  M[2][0] * s[3] - M[2][1] * s[1] + M[2][2] * s[0]) * idet;
+}
+
+
+static inline void mat6x6_invert(mat6x6 T, mat6x6 M)
+{
+    // 6 square matrix inversion with blockwise inversion
+    // TODO: no safety check yet for singularities
+    mat3x3 a, b, c, d, a_inv, b_inv, c_inv, d_inv, a_final, b_final, c_final, d_final;
+    mat6x6_get_sub_mat3x3(a, M, 0, 3, 0, 3);
+    mat6x6_get_sub_mat3x3(b, M, 0, 3, 3, 6);
+    mat6x6_get_sub_mat3x3(c, M, 3, 6, 0, 3);
+    mat6x6_get_sub_mat3x3(d, M, 3, 6, 3, 6);
+    mat3x3_invert(a_inv, a);
+    mat3x3_invert(b_inv, b);
+    mat3x3_invert(c_inv, c);
+    mat3x3_invert(d_inv, d);
+
+    mat3x3 inter1 = IDENTITY3x3;
+    mat3x3 inter2 = IDENTITY3x3;
+    mat3x3 inter3 = IDENTITY3x3;
+
+    mat3x3 dcab = ZERO3x3;
+    mat3x3_mul_n(inter1, a_inv, b);
+    mat3x3_mul_n(inter2, c, inter1);
+    mat3x3_sub_n(inter3, d, inter2);
+    mat3x3_invert(dcab, inter3);
+
+    // compute new A
+    mat3x3_mul_n(inter1, c, a_inv);
+
+    mat3x3_mul_n(inter2, dcab, inter1);
+    mat3x3_mul_n(inter3, b, inter2);
+    mat3x3_mul_n(inter2, a_inv, inter3);
+
+    mat3x3_add_n(a_final, a_inv, inter2);
+
+    // compute new B
+    mat3x3_mul_n(inter2, b, dcab);
+    mat3x3_mul_n(inter1, a_inv, inter2);
+    mat3x3_scale_n(b_final, inter1, -1.0f);
+
+    // compute new C
+    mat3x3_mul_n(inter1, c, a_inv);
+
+    mat3x3_scale_n(inter2, dcab, -1.0f);
+
+    mat3x3_mul_n(c_final, inter2, inter1);
+
+    // compute new D
+    mat3x3_copy(d_final, dcab);
+
+    combine_mat3x3_to_mat6x6(T, a_final, b_final, c_final, d_final);
 }
 
 
@@ -1088,58 +1168,6 @@ static inline void quat_from_mat4x4(quat q, mat4x4 M) {
         q[1] = (M[1][2] + M[2][1]) / trace_sqrt;
         q[2] = 0.25f * trace_sqrt;
     }
-}
-
-
-static inline void mat6x6_invert(mat6x6 T, mat6x6 M)
-{
-    // 6 square matrix inversion with blockwise inversion
-    // TODO: no safety check yet for singularities
-    mat3x3 a, b, c, d, a_inv, b_inv, c_inv, d_inv, a_final, b_final, c_final, d_final;
-    mat6x6_get_sub_mat3x3(a, M, 0, 3, 0, 3);
-    mat6x6_get_sub_mat3x3(b, M, 0, 3, 3, 6);
-    mat6x6_get_sub_mat3x3(c, M, 3, 6, 0, 3);
-    mat6x6_get_sub_mat3x3(d, M, 3, 6, 3, 6);
-    mat3x3_invert(a_inv, a);
-    mat3x3_invert(b_inv, b);
-    mat3x3_invert(c_inv, c);
-    mat3x3_invert(d_inv, d);
-
-    mat3x3 inter1 = IDENTITY3x3;
-    mat3x3 inter2 = IDENTITY3x3;
-    mat3x3 inter3 = IDENTITY3x3;
-
-    mat3x3 dcab = ZERO3x3;
-    mat3x3_mul_n(inter1, a_inv, b);
-    mat3x3_mul_n(inter2, c, inter1);
-    mat3x3_sub_n(inter3, d, inter2);
-    mat3x3_invert(dcab, inter3);
-
-    // compute new A
-    mat3x3_mul_n(inter1, c, a_inv);
-
-    mat3x3_mul_n(inter2, dcab, inter1);
-    mat3x3_mul_n(inter3, b, inter2);
-    mat3x3_mul_n(inter2, a_inv, inter3);
-
-    mat3x3_add_n(a_final, a_inv, inter2);
-
-    // compute new B
-    mat3x3_mul_n(inter2, b, dcab);
-    mat3x3_mul_n(inter1, a_inv, inter2);
-    mat3x3_scale_n(b_final, inter1, -1.0f);
-
-    // compute new C
-    mat3x3_mul_n(inter1, c, a_inv);
-
-    mat3x3_scale_n(inter2, dcab, -1.0f);
-
-    mat3x3_mul_n(c_final, inter2, inter1);
-
-    // compute new D
-    mat3x3_copy(d_final, dcab);
-
-    combine_mat3x3_to_mat6x6(T, a_final, b_final, c_final, d_final);
 }
 
 
