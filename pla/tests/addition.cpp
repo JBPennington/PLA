@@ -18,6 +18,16 @@ public:
     mat4x4 Mat4_zero {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
     mat5x5 Mat5_zero {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
     mat6x6 Mat6_zero {{0,0,0,0,0,0},{0,0,0,0,0,0},{0,0,0,0,0,0},{0,0,0,0,0,0},{0,0,0,0,0,0},{0,0,0,0,0,0}};
+    vec2   Vec2A     {0, 1};
+    vec3   Vec3A     {0, 1, 2};
+    vec4   Vec4A     {0, 1, 2, 3};
+    vec5   Vec5A     {0, 1, 2, 3, 4};
+    vec6   Vec6A     {0, 1, 2, 3, 4, 5};
+    vec2   Vec2B     {0, 1};
+    vec3   Vec3B     {0, 1, 2};
+    vec4   Vec4B     {0, 1, 2, 3};
+    vec5   Vec5B     {0, 1, 2, 3, 4};
+    vec6   Vec6B     {0, 1, 2, 3, 4, 5};
     mat2x2 Mat2A     {{0,1},{2,3}};
     mat3x3 Mat3A     {{0,1,2},{3,4,5},{6,7,8}};
     mat4x4 Mat4A     {{0,1,2,3},{4,5,6,7},{8,9,10,11},{12,13,14,15}};
@@ -30,213 +40,91 @@ public:
     mat6x6 Mat6B     {{0,1,2,3,4,5},{6,7,8,9,10,11},{12,13,14,15,16,17},{18,19,20,21,22,23},{24,25,26,27,28,29},{30,31,32,33,34,35}};
 };
 
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec2_Test) {
-    vec2 a = {0, 1};
-    vec2 b = {2, 3};
 
-    vec2 result = {0, 0};
-    vec2_add_n(result, a, b);
+TEST_F(Linear_Algebra_Add_, Two_Through_Six_Vec_Add_to_New_Vec_Test) {
 
-    vec2 expect = {2, 4};
+    vec2 Vec2_expected {0,2};
+    vec3 Vec3_expected {0,2,4};
+    vec4 Vec4_expected {0,2,4,6};
+    vec5 Vec5_expected {0,2,4,6,8};
+    vec6 Vec6_expected {0,2,4,6,8,10};
 
-    uint32_t iter;
-    for (iter=0; iter<2; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
+    vec2 Vec2_result ZERO2;
+    vec3 Vec3_result ZERO3;
+    vec4 Vec4_result ZERO4;
+    vec5 Vec5_result ZERO5;
+    vec6 Vec6_result ZERO6;
+
+    for (std::size_t size = 2; size<7; ++size) {
+        if (size == 2) vec2_add_n(Vec2_result, Vec2A, Vec2B);
+        if (size == 3) vec3_add_n(Vec3_result, Vec3A, Vec3B);
+        if (size == 4) vec4_add_n(Vec4_result, Vec4A, Vec4B);
+        if (size == 5) vec5_add_n(Vec5_result, Vec5A, Vec5B);
+        if (size == 6) vec6_add_n(Vec6_result, Vec6A, Vec6B);
+        for (std::size_t index = 0; index < size; ++index) {
+            if (size == 2) EXPECT_NEAR(Vec2_expected[index], Vec2_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 3) EXPECT_NEAR(Vec3_expected[index], Vec3_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 4) EXPECT_NEAR(Vec4_expected[index], Vec4_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 5) EXPECT_NEAR(Vec5_expected[index], Vec5_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 6) EXPECT_NEAR(Vec6_expected[index], Vec6_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+        }
     }
 }
 
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec3_Test) {
-    vec3 a = {0, 1, 2};
-    vec3 b = {3, 4, 5};
 
-    vec3 result = {0, 0, 0};
-    vec3_add_n(result, a, b);
+TEST_F(Linear_Algebra_Add_, Two_Through_Six_Vec_Add_In_Place_Test) {
 
-    vec3 expect = {3, 5, 7};
+    vec2 Vec2_expected {0,2};
+    vec3 Vec3_expected {0,2,4};
+    vec4 Vec4_expected {0,2,4,6};
+    vec5 Vec5_expected {0,2,4,6,8};
+    vec6 Vec6_expected {0,2,4,6,8,10};
 
-    uint32_t iter;
-    for (iter=0; iter<3; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
+    vec2 Vec2_result ZERO2; vec2_copy(Vec2_result,Vec2A);
+    vec3 Vec3_result ZERO3; vec3_copy(Vec3_result,Vec3A);
+    vec4 Vec4_result ZERO4; vec4_copy(Vec4_result,Vec4A);
+    vec5 Vec5_result ZERO5; vec5_copy(Vec5_result,Vec5A);
+    vec6 Vec6_result ZERO6; vec6_copy(Vec6_result,Vec6A);
+
+    for (std::size_t size = 2; size<7; ++size) {
+        if (size == 2) vec2_add(Vec2_result, Vec2B);
+        if (size == 3) vec3_add(Vec3_result, Vec3B);
+        if (size == 4) vec4_add(Vec4_result, Vec4B);
+        if (size == 5) vec5_add(Vec5_result, Vec5B);
+        if (size == 6) vec6_add(Vec6_result, Vec6B);
+        for (std::size_t index = 0; index < size; ++index) {
+            if (size == 2) EXPECT_NEAR(Vec2_expected[index], Vec2_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 3) EXPECT_NEAR(Vec3_expected[index], Vec3_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 4) EXPECT_NEAR(Vec4_expected[index], Vec4_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 5) EXPECT_NEAR(Vec5_expected[index], Vec5_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 6) EXPECT_NEAR(Vec6_expected[index], Vec6_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+        }
     }
 }
 
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec4_Test) {
-    vec4 a = {0, 1, 2, 3};
-    vec4 b = {4, 5, 6, 7};
 
-    vec4 result = {0, 0, 0, 0};
-    vec4_add_n(result, a, b);
+TEST_F(Linear_Algebra_Add_, Two_Through_Six_Vec_Add_And_Return_Test) {
 
-    vec4 expect = {4, 6, 8, 10};
+    vec2 Vec2_expected {0,2};
+    vec3 Vec3_expected {0,2,4};
+    vec4 Vec4_expected {0,2,4,6};
+    vec5 Vec5_expected {0,2,4,6,8};
+    vec6 Vec6_expected {0,2,4,6,8,10};
 
-    uint32_t iter;
-    for (iter=0; iter<4; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
+    float * Vec2_result = vec2_add_r(Vec2A,Vec2B);
+    float * Vec3_result = vec3_add_r(Vec3A,Vec3B);
+    float * Vec4_result = vec4_add_r(Vec4A,Vec4B);
+    float * Vec5_result = vec5_add_r(Vec5A,Vec5B);
+    float * Vec6_result = vec6_add_r(Vec6A,Vec6B);
 
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec5_Test) {
-    vec5 a = {0, 1, 2, 3, 4};
-    vec5 b = {5, 6, 7, 8, 9};
-
-    vec5 result = {0, 0, 0, 0, 0};
-    vec5_add_n(result, a, b);
-
-    vec5 expect = {5, 7, 9, 11, 13};
-
-    uint32_t iter;
-    for (iter=0; iter<5; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec6_Test) {
-    vec6 a = {0, 1, 2, 3, 4, 5};
-    vec6 b = {6, 7, 8, 9, 10, 11};
-
-    vec6 result = {0, 0, 0, 0, 0, 0};
-    vec6_add_n(result, a, b);
-
-    vec6 expect = {6, 8, 10, 12, 14, 16};
-
-    uint32_t iter;
-    for (iter=0; iter<6; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec2_In_Place_Test) {
-    vec2 a = {0, 1};
-    vec2 b = {2, 3};
-
-    vec2_add(a, b);
-
-    vec2 expect = {2, 4};
-    uint32_t iter;
-    for (iter=0; iter<2; ++iter) {
-        EXPECT_EQ(expect[iter], a[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec3_In_Place_Test) {
-    vec3 a = {0, 1, 2};
-    vec3 b = {3, 4, 5};
-
-    vec3_add(a, b);
-
-    vec3 expect = {3, 5, 7};
-    uint32_t iter;
-    for (iter=0; iter<3; ++iter) {
-        EXPECT_EQ(expect[iter], a[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec4_In_Place_Test) {
-    vec4 a = {0, 1, 2, 3};
-    vec4 b = {4, 5, 6, 7};
-
-    vec4_add(a, b);
-
-    vec4 expect = {4, 6, 8, 10};
-    uint32_t iter;
-    for (iter=0; iter<4; ++iter) {
-        EXPECT_EQ(expect[iter], a[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec5_In_Place_Test) {
-    vec5 a = {0, 1, 2, 3, 4};
-    vec5 b = {5, 6, 7, 8, 9};
-
-    vec5_add(a, b);
-
-    vec5 expect = {5, 7, 9, 11, 13};
-    uint32_t iter;
-    for (iter=0; iter<5; ++iter) {
-        EXPECT_EQ(expect[iter], a[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Two_Vec6_In_Place_Test) {
-    vec6 a = {0, 1, 2, 3, 4, 5};
-    vec6 b = {6, 7, 8, 9, 10, 11};
-
-    vec6_add(a, b);
-
-    vec6 expect = {6, 8, 10, 12, 14, 16};
-    uint32_t iter;
-    for (iter=0; iter<6; ++iter) {
-        EXPECT_EQ(expect[iter], a[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec2_Test) {
-    vec2 a = {0, 1};
-    vec2 b = {2, 3};
-
-    float * result = vec2_add_r(a, b);
-
-    vec2 expect = {2, 4};
-
-    uint32_t iter;
-    for (iter=0; iter<2; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec3_Test) {
-    vec3 a = {0, 1, 2};
-    vec3 b = {3, 4, 5};
-
-    float * result = vec3_add_r(a, b);
-
-    vec3 expect = {3, 5, 7};
-
-    uint32_t iter;
-    for (iter=0; iter<3; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec4_Test) {
-    vec4 a = {0, 1, 2, 3};
-    vec4 b = {4, 5, 6, 7};
-
-    float * result = vec4_add_r(a, b);
-
-    vec4 expect = {4, 6, 8, 10};
-
-    uint32_t iter;
-    for (iter=0; iter<4; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec5_Test) {
-    vec5 a = {0, 1, 2, 3, 4};
-    vec5 b = {5, 6, 7, 8, 9};
-
-    float * result = vec5_add_r(a, b);
-
-    vec5 expect = {5, 7, 9, 11, 13};
-
-    uint32_t iter;
-    for (iter=0; iter<5; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
-    }
-}
-
-TEST_F(Linear_Algebra_Add_, Add_Return_Two_Vec6_Test) {
-    vec6 a = {0, 1, 2, 3, 4, 5};
-    vec6 b = {6, 7, 8, 9, 10, 11};
-
-    float * result = vec6_add_r(a, b);
-
-    vec6 expect = {6, 8, 10, 12, 14, 16};
-
-    uint32_t iter;
-    for (iter=0; iter<6; ++iter) {
-        EXPECT_EQ(expect[iter], result[iter]);
+    for (std::size_t size = 2; size<7; ++size) {
+        for (std::size_t index = 0; index < size; ++index) {
+            if (size == 2) EXPECT_NEAR(Vec2_expected[index], Vec2_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 3) EXPECT_NEAR(Vec3_expected[index], Vec3_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 4) EXPECT_NEAR(Vec4_expected[index], Vec4_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 5) EXPECT_NEAR(Vec5_expected[index], Vec5_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+            if (size == 6) EXPECT_NEAR(Vec6_expected[index], Vec6_result[index], tolerance) << "Vec: " << size << " Index: " << index;
+        }
     }
 }
 
